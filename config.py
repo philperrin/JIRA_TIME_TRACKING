@@ -8,32 +8,32 @@ col1, col2 = st.columns(2)
 #Config Modal
 with col1:
   @st.dialog("Jira Configuration Details")
-    def config_modal():
-      if st.user and "email" in st.user:
-        user_email = st.user["email"]
-      else:
-        user_email = "EMAIL REQUIRED"
-        
-      with st.form("config_form", clear_on_submit=True):
-        user_email_input = st.text_input("Email", value=user_email)
-        filter_id = st.text_input("Jira filter id")
-        api_key = st.text_input("Jira API key")
-        submitted = st.form_submit_button("Submit Details")
-          if submitted:
-            st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
-            st.rerun()
+  def config_modal():
+    if st.user and "email" in st.user:
+      user_email = st.user["email"]
+    else:
+      user_email = "EMAIL REQUIRED"
+    
+    with st.form("config_form", clear_on_submit=True):
+      user_email_input = st.text_input("Email", value=user_email)
+      filter_id = st.text_input("Jira filter id")
+      api_key = st.text_input("Jira API key")
+      submitted = st.form_submit_button("Submit Details")
+      if submitted:
+        st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
+        st.rerun()
     if "submission_data" not in st.session_state:
       st.session_state["submission_data"] = None
     if st.button("Open config form"):
       config_modal()
-      
-    if st.session_state["submission_data"]:
-      st.success("Captured config details!")
-      st.write("**Submitted Data:**")
-      st.write(f"- Email: {st.session_state['submission_data']['email']}")
-      st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
-      st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
-      st.write("---")
+  
+  if st.session_state["submission_data"]:
+    st.success("Captured config details!")
+    st.write("**Submitted Data:**")
+    st.write(f"- Email: {st.session_state['submission_data']['email']}")
+    st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
+    st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
+    st.write("---")
 
 
 #Allocation Modal
