@@ -32,14 +32,13 @@ def config_modal():
 
 
 #Allocation Modal
-with col2:
-  @st.dialog("Allocation Details")
-  def allocation_modal():
-    with st.form("allocation_form", clear_on_submit=True):
-      st.markdown("Insert a set of columns here for allocation details")
-      submitted = st.form_submit_button("Save Allocations")
-      if submitted:
-        st.rerun()
+@st.dialog("Allocation Details")
+def allocation_modal():
+  with st.form("allocation_form", clear_on_submit=True):
+    st.markdown("Insert a set of columns here for allocation details")
+    submitted = st.form_submit_button("Save Allocations")
+    if submitted:
+      st.rerun()
     #if st.button("Open allocation form"):
     #  allocation_modal()
 
