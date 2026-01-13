@@ -18,8 +18,8 @@ def config_modal():
     if submitted:
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
       st.rerun()
-      if "submission_data" not in st.session_state:
-        st.session_state["submission_data"] = None
+if "submission_data" not in st.session_state:
+  st.session_state["submission_data"] = None
 
 
 #Allocation Modal
