@@ -1,7 +1,7 @@
 import streamlit as st
 
 pages = {
-    "Jira Time Tracker App": [
+    "Menu": [
         st.Page("main.py", title="Log time to Jira"),
         st.Page("config.py", title="Configure"),
         st.Page("reports.py", title="Reports"),
