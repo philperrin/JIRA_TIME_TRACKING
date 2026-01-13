@@ -2,7 +2,7 @@ import streamlit as st
 
 st.title("Reports")
 
-st.text("Use this page show user insights.")
+st.text("Show user insights.")
 
 with st.expander("Components to build:"):
   st.markdown(":pencil2:   Current week: hours to allcations")
