@@ -2,7 +2,7 @@ import streamlit as st
 
 pages = {
     "Menu": [
-        st.Page("main.py", title="Log time to Jira"),
+        st.Page("log.py", title="Log time to Jira"),
         st.Page("config.py", title="Configure"),
         st.Page("reports.py", title="Reports"),
     ],
