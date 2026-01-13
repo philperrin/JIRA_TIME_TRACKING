@@ -1,3 +1,5 @@
+import streamlit as st
+
 pages = {
     "Your account": [
         st.Page("main.py", title="Log time to Jira"),
