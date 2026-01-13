@@ -3,37 +3,32 @@ st.title("Config")
 
 st.text("Use this page to provide configuration details necessary for the app.")
 
-col1, col2 = st.columns(2)
-
 #Config Modal
-with col1:
-  @st.dialog("Jira Configuration Details")
-  def config_modal():
-    if st.user and "email" in st.user:
-      user_email = st.user["email"]
-    else:
-      user_email = "EMAIL REQUIRED"
-    
-    with st.form("config_form", clear_on_submit=True):
-      user_email_input = st.text_input("Email", value=user_email)
-      filter_id = st.text_input("Jira filter id")
-      api_key = st.text_input("Jira API key")
-      submitted = st.form_submit_button("Submit Details")
-      if submitted:
-        st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
-        st.rerun()
-    if "submission_data" not in st.session_state:
-      st.session_state["submission_data"] = None
-    if st.button("Open config form"):
-      config_modal()
-  
-    if st.session_state["submission_data"]:
-      st.success("Captured config details!")
-      st.write("**Submitted Data:**")
-      st.write(f"- Email: {st.session_state['submission_data']['email']}")
-      st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
-      st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
-      st.write("---")
+@st.dialog("Jira Configuration Details")
+def config_modal():
+  if st.user and "email" in st.user:
+    user_email = st.user["email"]
+  else:
+    user_email = "EMAIL REQUIRED"
+  with st.form("config_form", clear_on_submit=True):
+    user_email_input = st.text_input("Email", value=user_email)
+    filter_id = st.text_input("Jira filter id")
+    api_key = st.text_input("Jira API key")
+    submitted = st.form_submit_button("Submit Details")
+    if submitted:
+      st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
+      st.rerun()
+      if "submission_data" not in st.session_state:
+        st.session_state["submission_data"] = None
+      #if st.button("Open config form"):
+      #  config_modal()
+  if st.session_state["submission_data"]:
+    st.success("Captured config details!")
+    st.write("**Submitted Data:**")
+    st.write(f"- Email: {st.session_state['submission_data']['email']}")
+    st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
+    st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
+    st.write("---")
 
 
 #Allocation Modal
@@ -45,11 +40,21 @@ with col2:
       submitted = st.form_submit_button("Save Allocations")
       if submitted:
         st.rerun()
-    if st.button("Open allocation form"):
-      allocation_modal()
+    #if st.button("Open allocation form"):
+    #  allocation_modal()
 
 
 #Standard Page
+col1, col2 = st.columns(2)
+
+with col1:
+  if st.button("Open config form", use_container_width=True):
+    config_modal()
+
+with col2:
+  if st.button("Open allocation form", use_container_width=True):
+    allocation_modal()
+
 with st.expander("Components to build:"):
   st.markdown(":white_check_mark:   Input user email")
   st.markdown(":white_check_mark:   Input Jira filter id")
