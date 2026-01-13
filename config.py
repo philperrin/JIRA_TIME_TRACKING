@@ -3,6 +3,7 @@ st.title("Config")
 
 st.text("Use this page to provide configuration details necessary for the app.")
 
+#Config Modal
 @st.dialog("Jira Configuration Details")
 def config_modal():
   with st.form("config_form", clear_on_submit=True):
@@ -26,6 +27,20 @@ if st.session_state["submission_data"]:
   st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
   st.write("---")
 
+
+#Allocation Modal
+@st.dialog("Allocation Details")
+def allocation_modal():
+  with st.form("allocation_form", clear_on_submit=True):
+    st.markdown("Insert a set of columns here for allocation details")
+    submitted = st.form_submit_button("Save Allocations")
+    if submitted:
+      st.rerun()
+if st.button("Open allocation form"):
+    allocation_modal()
+
+
+#Standard Page
 with st.expander("Components to build:"):
   st.markdown(":pencil2:   Input user email")
   st.markdown(":pencil2:   Input Jira filter id")
