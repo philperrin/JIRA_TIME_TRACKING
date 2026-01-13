@@ -21,14 +21,6 @@ def config_modal():
       if "submission_data" not in st.session_state:
         st.session_state["submission_data"] = None
 
-if st.session_state["submission_data"]:
-  st.success("Captured config details!")
-  st.write("**Submitted Data:**")
-  st.write(f"- Email: {st.session_state['submission_data']['email']}")
-  st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
-  st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
-  st.write("---")
-
 
 #Allocation Modal
 @st.dialog("Allocation Details")
@@ -42,14 +34,20 @@ def allocation_modal():
 
 #Standard Page
 col1, col2 = st.columns(2)
-
 with col1:
   if st.button("Open config form", use_container_width=True):
     config_modal()
-
 with col2:
   if st.button("Open allocation form", use_container_width=True):
     allocation_modal()
+
+if st.session_state["submission_data"]:
+  st.success("Captured config details!")
+  st.write("**Submitted Data:**")
+  st.write(f"- Email: {st.session_state['submission_data']['email']}")
+  st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
+  st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
+  st.write("---")
 
 with st.expander("Components to build:"):
   st.markdown(":white_check_mark:   Input user email")
