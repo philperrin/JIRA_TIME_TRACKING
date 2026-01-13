@@ -22,13 +22,13 @@ def config_modal():
         st.session_state["submission_data"] = None
       #if st.button("Open config form"):
       #  config_modal()
-  if st.session_state["submission_data"]:
-    st.success("Captured config details!")
-    st.write("**Submitted Data:**")
-    st.write(f"- Email: {st.session_state['submission_data']['email']}")
-    st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
-    st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
-    st.write("---")
+    if st.session_state["submission_data"]:
+      st.success("Captured config details!")
+      st.write("**Submitted Data:**")
+      st.write(f"- Email: {st.session_state['submission_data']['email']}")
+      st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
+      st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
+      st.write("---")
 
 
 #Allocation Modal
