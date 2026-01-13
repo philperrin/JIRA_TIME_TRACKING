@@ -3,62 +3,68 @@ st.title("Config")
 
 st.text("Use this page to provide configuration details necessary for the app.")
 
+col1, col2 = st.columns(2)
+
 #Config Modal
-@st.dialog("Jira Configuration Details")
-def config_modal():
-  if st.user and "email" in st.user:
-    user_email = st.user["email"]
-  else:
-    user_email = "EMAIL REQUIRED"
-
-  with st.form("config_form", clear_on_submit=True):
-    user_email_input = st.text_input("Email", value=user_email)
-    filter_id = st.text_input("Jira filter id")
-    api_key = st.text_input("Jira API key")
-    submitted = st.form_submit_button("Submit Details")
-    if submitted:
-      st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
-      st.rerun()
-if "submission_data" not in st.session_state:
-    st.session_state["submission_data"] = None
-if st.button("Open config form"):
-    config_modal()
-
-if st.session_state["submission_data"]:
-  st.success("Captured config details!")
-  st.write("**Submitted Data:**")
-  st.write(f"- Email: {st.session_state['submission_data']['email']}")
-  st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
-  st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
-  st.write("---")
+with col1:
+  @st.dialog("Jira Configuration Details")
+    def config_modal():
+      if st.user and "email" in st.user:
+        user_email = st.user["email"]
+      else:
+        user_email = "EMAIL REQUIRED"
+        
+      with st.form("config_form", clear_on_submit=True):
+        user_email_input = st.text_input("Email", value=user_email)
+        filter_id = st.text_input("Jira filter id")
+        api_key = st.text_input("Jira API key")
+        submitted = st.form_submit_button("Submit Details")
+          if submitted:
+            st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
+            st.rerun()
+    if "submission_data" not in st.session_state:
+      st.session_state["submission_data"] = None
+    if st.button("Open config form"):
+      config_modal()
+      
+    if st.session_state["submission_data"]:
+      st.success("Captured config details!")
+      st.write("**Submitted Data:**")
+      st.write(f"- Email: {st.session_state['submission_data']['email']}")
+      st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
+      st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
+      st.write("---")
 
 
 #Allocation Modal
-@st.dialog("Allocation Details")
-def allocation_modal():
-  with st.form("allocation_form", clear_on_submit=True):
-    st.markdown("Insert a set of columns here for allocation details")
-    submitted = st.form_submit_button("Save Allocations")
-    if submitted:
-      st.rerun()
-if st.button("Open allocation form"):
-    allocation_modal()
+with col2:
+  @st.dialog("Allocation Details")
+  def allocation_modal():
+    with st.form("allocation_form", clear_on_submit=True):
+      st.markdown("Insert a set of columns here for allocation details")
+      submitted = st.form_submit_button("Save Allocations")
+      if submitted:
+        st.rerun()
+    if st.button("Open allocation form"):
+      allocation_modal()
 
 
 #Standard Page
 with st.expander("Components to build:"):
-  st.markdown(":pencil2:   Input user email")
-  st.markdown(":pencil2:   Input Jira filter id")
-  st.markdown(":pencil2:   Input Jira API key")
+  st.markdown(":white_check_mark:   Input user email")
+  st.markdown(":white_check_mark:   Input Jira filter id")
+  st.markdown(":white_check_mark:   Input Jira API key")
   st.markdown(":pencil2:   Collect user Jira id (requires user email and API key)")
   st.markdown(":pencil2:   Input allocations")
   st.markdown(":pencil2:   Collect issues from Jira filter id")
+  st.markdown(":pencil2:   Create row access policies based on CURRENT_USER in tables in env schema")
+  st.markdown(":pencil2:   If filter id exists, show current filter logic")
 
 with st.expander("Functionalities:"):
   st.markdown(":firecracker:   Button to pop up base config modal")
-  st.markdown("   :boom:   Modal to collect user email, filter id, API key")
-  st.markdown("   :boom:   On modal submit -> create Schema for user with: config table, allocation table, history table")
-  st.markdown("   :boom:   On modal submit -> collect user Jira id")
+  st.markdown("  :boom:   Modal to collect user email, filter id, API key")
+  st.markdown("  :boom:   On modal submit -> store details in config table")
+  st.markdown("  :boom:   On modal submit -> collect user Jira id and store with config details")
   st.markdown(":firecracker:   Button to pop up allocation modal")
-  st.markdown("   :boom:   Modal has input table for: Jira project id, client name, project name, weekly hrs, effective dates")
-  st.markdown("   :boom:   If allocation table has data in it, display current allocation details - including link to Jira board")
+  st.markdown("  :boom:   Modal has input table for: Jira project id, client name, project name, weekly hrs, effective dates")
+  st.markdown("  :boom:   If allocation table has data in it, display current allocation details - including link to Jira board")
