@@ -1,7 +1,11 @@
 import streamlit as st
-st.title("Config")
+import pandas as pd
 
+st.title("Config")
 st.text("Use this page to provide configuration details necessary for the app.")
+
+if 'df' not in st.session_state:
+    st.session_state.df = pd.DataFrame(columns=['USER_EMAIL','FILTER_ID','API_KEY','UPDATED_AT'])
 
 #Config Modal
 @st.dialog("Jira Configuration Details")
