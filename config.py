@@ -33,16 +33,15 @@ def config_modal():
     user_email_input = st.text_input("Email", value=user_email)
     filter_id = st.text_input("Jira filter id")
     api_key = st.text_input("Jira API key")
-    submitted = st.form_submit_button("Submit Details")
-    url = "https://phdata.atlassian.net/rest/api/3/user/bulk/migration"
-    auth = HTTPBasicAuth(user_email_input, api_key)
-    headers = {
-      "Accept": "application/json"
-    }
     if submitted:
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
       st.balloons()
       updated_at = datetime.now()
+      url = "https://phdata.atlassian.net/rest/api/3/user/bulk/migration"
+      auth = HTTPBasicAuth(user_email_input, api_key)
+      headers = {
+          "Accept": "application/json"
+      }
       response = requests.request(
           "GET",
           url,
