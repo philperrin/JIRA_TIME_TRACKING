@@ -35,7 +35,7 @@ def config_modal():
     api_key = st.text_input("Jira API key")
     submitted = st.form_submit_button("Submit Details")
     url = "https://phdata.atlassian.net/rest/api/3/user/bulk/migration"
-    auth = HTTPBasicAuth(user_email_input, api_key)
+    auth = HTTPBasicAuth(f'"{user_email_input}", "{api_token}"')
     headers = {
       "Accept": "application/json"
     }
