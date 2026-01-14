@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 from snowflake.snowpark.context import get_active_session
+import requests
+from requests.auth import HTTPBasicAuth
+import json
 
 TABLE_NAME = "CONFIG_DETAILS"
 COL1 = "USER_EMAIL" 
@@ -31,6 +34,7 @@ def config_modal():
     submitted = st.form_submit_button("Submit Details")
     if submitted:
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
+      st.balloons()
       updated_at = datetime.now()
       if user_email_input and filter_id and api_key:
           try:
@@ -64,6 +68,7 @@ with col2:
   if st.button("Open allocation form", use_container_width=True):
     allocation_modal()
 
+"""
 if st.session_state["submission_data"]:
   st.success("Captured config details!")
   st.write("**Submitted Data:**")
@@ -71,11 +76,14 @@ if st.session_state["submission_data"]:
   st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
   st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
   st.write("---")
+"""
 
 with st.expander("Components to build:"):
   st.markdown(":white_check_mark:   Input user email")
   st.markdown(":white_check_mark:   Input Jira filter id")
   st.markdown(":white_check_mark:   Input Jira API key")
+  st.markdown(":white_check_mark:   Mask Jira API key")
+  st.markdown(":white_check_mark:   Create view showing user's most recent submission")
   st.markdown(":pencil2:   Collect user Jira id (requires user email and API key)")
   st.markdown(":pencil2:   Input allocations")
   st.markdown(":pencil2:   Collect issues from Jira filter id")
@@ -84,9 +92,9 @@ with st.expander("Components to build:"):
 
 with st.expander("Functionalities:"):
   st.markdown(":firecracker:   Button to pop up base config modal")
-  st.markdown("  :boom:   Modal to collect user email, filter id, API key")
-  st.markdown("  :boom:   On modal submit -> store details in config table")
-  st.markdown("  :boom:   On modal submit -> collect user Jira id and store with config details")
+  st.markdown(":white_check_mark:   Modal to collect user email, filter id, API key")
+  st.markdown(":white_check_mark:   On modal submit -> store details in config table")
+  st.markdown(":boom:   On modal submit -> collect user Jira id and store with config details")
   st.markdown(":firecracker:   Button to pop up allocation modal")
   st.markdown("  :boom:   Modal has input table for: Jira project id, client name, project name, weekly hrs, effective dates")
   st.markdown("  :boom:   If allocation table has data in it, display current allocation details - including link to Jira board")
