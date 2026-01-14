@@ -34,9 +34,9 @@ def config_modal():
       updated_at = datetime.now()
       if user_email_input and filter_id and api_key:
           try:
-              insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES ('{user_email_input}','{filter_id}','{api_key}','{updated_at}')"
+              insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email_input}'),'{filter_id}','{api_key}','{updated_at}')"
               session.sql(insert_query).collect()
-              st.success("Data successfully written to Snowflake!")
+              st.success("Config details saved!")
           except Exception as e:
               st.error(f"An error occurred: {e}")
       else:
