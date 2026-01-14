@@ -12,6 +12,8 @@ COL4 = "UPDATED_AT"
 st.title("Config")
 st.text("Use this page to provide configuration details necessary for the app.")
 
+session = get_active_session()
+
 if 'df' not in st.session_state:
     st.session_state.df = pd.DataFrame(columns=['USER_EMAIL','FILTER_ID','API_KEY','UPDATED_AT'])
 
