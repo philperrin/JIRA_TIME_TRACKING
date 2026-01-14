@@ -1,5 +1,13 @@
 import streamlit as st
 import pandas as pd
+from datetime import datetime
+from snowflake.snowpark.context import get_active_session
+
+TABLE_NAME = "CONFIG_DETAILS"
+COL1 = "USER_EMAIL" 
+COL2 = "FILTER_ID"
+COL3 = "API_KEY" 
+COL4 = "UPDATED_AT"
 
 st.title("Config")
 st.text("Use this page to provide configuration details necessary for the app.")
@@ -21,10 +29,19 @@ def config_modal():
     submitted = st.form_submit_button("Submit Details")
     if submitted:
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
-      st.rerun()
+      updated_at = datetime.now()
+      if user_email_input and filter_id and api_key:
+          try:
+              insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES ('{user_email_input}','{filter_id}','{api_key}','{updated_at}')"
+              session.sql(insert_query).collect()
+              st.success("Data successfully written to Snowflake!")
+          except Exception as e:
+              st.error(f"An error occurred: {e}")
+      else:
+          st.warning("Please fill in all fields.")
+
 if "submission_data" not in st.session_state:
   st.session_state["submission_data"] = None
-
 
 #Allocation Modal
 @st.dialog("Allocation Details")
