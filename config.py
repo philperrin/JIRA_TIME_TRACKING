@@ -61,6 +61,8 @@ def config_modal():
               st.success("Config details saved!")
               response_json = json.loads(response.text)
               response_dumps = json.dumps(response_json,sort_keys=True,indent=4,separators=(",",": "))
+              st.success(response)
+              st.success(response_json)
               st.success(response_dumps)
               st.success(response_json['accountId'])
               #st.success((json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": "))))
