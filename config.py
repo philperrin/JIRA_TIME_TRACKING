@@ -37,6 +37,8 @@ def config_modal():
     api_key = st.text_input("Jira API key")
     submitted = st.form_submit_button("Submit Details")
     if submitted:
+      #First will need to run CREATE OR REPLACE SECRET jira_credentials_username ((NEED TO REMOVE @PHDATA.IO)) TYPE = GENERIC_STRING SECRET_STRING = '{"email": "email", "api_token": "token"}';
+      #Then ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration ALLOWED_AUTHENTICATION_SECRETS = (jira_credentials) ENABLED = TRUE;
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
       updated_at = datetime.now()
       url = f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}"
@@ -62,7 +64,7 @@ def config_modal():
               active_session.sql(insert_query).collect()
               st.success("Config details saved!")
           except Exception as e:
-              st.error(f"An error occurred: {e}")
+              st.error(f"Error: {e}")
       else:
           st.warning("Please fill in all fields.")
 
