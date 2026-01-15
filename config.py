@@ -39,12 +39,6 @@ def config_modal():
     if submitted:
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
       updated_at = datetime.now()
-      #session = requests.Session()
-      #retry = Retry(connect=3, backoff_factor=0.5)
-      #adapter = HTTPAdapter(max_retries=retry)
-      #session.mount('http://', adapter)
-      #session.mount('https://', adapter)
-      #session.get(f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}")
       url = f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}"
       auth = HTTPBasicAuth(user_email_input, api_key)
       headers = {
@@ -65,7 +59,10 @@ def config_modal():
               insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email_input}'),'{filter_id}','{api_key}','{updated_at}')"
               active_session.sql(insert_query).collect()
               st.success("Config details saved!")
-              st.success((json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": "))))
+              response_json = json.loads(response)
+              json_uid = response_json['accountId']
+              st.success(json_uid)
+              #st.success((json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": "))))
           except Exception as e:
               st.error(f"An error occurred: {e}")
       else:
