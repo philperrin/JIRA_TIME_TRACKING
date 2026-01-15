@@ -42,8 +42,8 @@ def config_modal():
       headers = {
           "Accept": "application/json"
       }
-      response = requests.request(
-          "GET",
+      try:  
+      response = requests.get(
           url,
           headers=headers,
           auth=auth
