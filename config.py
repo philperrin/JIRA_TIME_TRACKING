@@ -19,7 +19,7 @@ COL4 = "UPDATED_AT"
 st.title("Config")
 st.text("Use this page to provide configuration details necessary for the app.")
 
-session = get_active_session()
+active_session = get_active_session()
 
 if 'df' not in st.session_state:
     st.session_state.df = pd.DataFrame(columns=['USER_EMAIL','FILTER_ID','API_KEY','UPDATED_AT'])
@@ -63,9 +63,9 @@ def config_modal():
       if user_email_input and filter_id and api_key:
           try:
               insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email_input}'),'{filter_id}','{api_key}','{updated_at}')"
-              session.sql(insert_query).collect()
+              active_session.sql(insert_query).collect()
               st.success("Config details saved!")
-              st.success((json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": "))))
+              #st.success((json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": "))))
           except Exception as e:
               st.error(f"An error occurred: {e}")
       else:
