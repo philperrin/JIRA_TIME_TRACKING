@@ -62,6 +62,7 @@ def config_modal():
               response_json = json.loads(response.text)
               response_dumps = json.dumps(response_json,sort_keys=True,indent=4,separators=(",",": "))
               st.success(response_dumps)
+              st.success(response_json['accountId'])
               #st.success((json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": "))))
           except Exception as e:
               st.error(f"An error occurred: {e}")
