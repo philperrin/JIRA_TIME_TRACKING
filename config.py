@@ -60,8 +60,8 @@ def config_modal():
               active_session.sql(insert_query).collect()
               st.success("Config details saved!")
               response_json = json.loads(response.text)
-              json_uid = response_json['accountId']
-              st.success(json_uid)
+              response_dumps = json.dumps(response_json,sort_keys=True,indent=4,separators=(",",": "))
+              st.success(response_dumps)
               #st.success((json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": "))))
           except Exception as e:
               st.error(f"An error occurred: {e}")
