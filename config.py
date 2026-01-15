@@ -42,12 +42,12 @@ def config_modal():
       headers = {
           "Accept": "application/json"
       }
-      try:  
-      response = requests.get(
-          url,
-          headers=headers,
-          auth=auth
-      )
+      try:
+          response = requests.get(
+              url,
+              headers=headers,
+              auth=auth
+          )
       if user_email_input and filter_id and api_key:
           try:
               insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email_input}'),'{filter_id}','{api_key}','{updated_at}')"
