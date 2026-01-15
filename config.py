@@ -13,7 +13,7 @@ COL1 = "USER_EMAIL"
 COL2 = "FILTER_ID"
 COL3 = "API_KEY" 
 COL4 = "UPDATED_AT"
-
+COL5 = "JIRA_USER_ID"
 
 
 st.title("Config")
@@ -56,17 +56,19 @@ def config_modal():
 
       if user_email_input and filter_id and api_key:
           try:
-              insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email_input}'),'{filter_id}','{api_key}','{updated_at}')"
+              jira_user_id_r = json.loads(response.text)
+              jira_user_id = jira_user_id_r[0]['accountId']
+              insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4},{COL5}) VALUES (UPPER('{user_email_input}'),'{filter_id}','{api_key}','{updated_at}','{jira_user_id}')"
               active_session.sql(insert_query).collect()
               st.success("Config details saved!")
-              response_json = json.loads(response.text)
-              response_dumps = json.dumps(response_json,sort_keys=True,indent=4,separators=(",",": "))
-              st.success(response)
-              test_response = json.loads(response.text)
-              test_id = test_response[0]['accountId']
-              st.success(test_id)
-              st.success(response_json)
-              st.success(response_dumps)
+              #response_json = json.loads(response.text)
+              #response_dumps = json.dumps(response_json,sort_keys=True,indent=4,separators=(",",": "))
+              #st.success(response)
+              #test_response = json.loads(response.text)
+              #test_id = test_response[0]['accountId']
+              #st.success(test_id)
+              #st.success(response_json)
+              #st.success(response_dumps)
               #st.success((json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": "))))
           except Exception as e:
               st.error(f"An error occurred: {e}")
