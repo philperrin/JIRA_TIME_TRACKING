@@ -48,6 +48,10 @@ def config_modal():
               headers=headers,
               auth=auth
           )
+      except requests.exceptions.RequestException as e:
+          st.error(f"Error connecting to Jira: {e}")
+          st.error(f"Response: {response.text if 'response' in locals() else 'No response'}")
+
       if user_email_input and filter_id and api_key:
           try:
               insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email_input}'),'{filter_id}','{api_key}','{updated_at}')"
