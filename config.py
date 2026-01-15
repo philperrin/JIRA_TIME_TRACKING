@@ -90,16 +90,6 @@ with col2:
   if st.button("Open allocation form", use_container_width=True):
     allocation_modal()
 
-_ = """
-if st.session_state["submission_data"]:
-  st.success("Captured config details!")
-  st.write("**Submitted Data:**")
-  st.write(f"- Email: {st.session_state['submission_data']['email']}")
-  st.write(f"- Jira filter id: {st.session_state['submission_data']['filter_id']}")
-  st.write(f"- Jira API key: {st.session_state['submission_data']['api_key']}")
-  st.write("---")
-"""
-
 with st.expander("Components to build:"):
   st.markdown(":white_check_mark:   Input user email")
   st.markdown(":white_check_mark:   Input Jira filter id")
