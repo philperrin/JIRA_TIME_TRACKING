@@ -37,7 +37,7 @@ def config_modal():
     if submitted:
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
       updated_at = datetime.now()
-      url = f"https://phdata.atlassian.net/rest/api/3/user/search?query="{user_email_input}
+      url = f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}"
       auth = HTTPBasicAuth(user_email_input, api_key)
       headers = {
           "Accept": "application/json"
