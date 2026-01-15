@@ -39,6 +39,10 @@ def config_modal():
     if submitted:
       #First will need to run CREATE OR REPLACE SECRET jira_credentials_username ((NEED TO REMOVE @PHDATA.IO)) TYPE = GENERIC_STRING SECRET_STRING = '{"email": "email", "api_token": "token"}';
       #Then ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration ALLOWED_AUTHENTICATION_SECRETS = (jira_credentials) ENABLED = TRUE;
+      #create_int = f"CREATE OR REPLACE SECRET jira_credentials_ TYPE = GENERIC_STRING SECRET_STRING = {/'email/': /'{user_email_input}/', /'api_token/': /'{api_key}/'};"
+      #active_session.sql(create_int).collect()
+      #update_auth_sec = f"ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration ALLOWED_AUTHENTICATION_SECRET = (jira_credentials_) ENABLED = TRUE;"
+      #active_session.sql(update_auth_sec).collect()
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
       updated_at = datetime.now()
       url = f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}"
