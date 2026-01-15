@@ -59,7 +59,7 @@ def config_modal():
               insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email_input}'),'{filter_id}','{api_key}','{updated_at}')"
               active_session.sql(insert_query).collect()
               st.success("Config details saved!")
-              response_json = json.loads(response)
+              response_json = json.loads(response.text)
               json_uid = response_json['accountId']
               st.success(json_uid)
               #st.success((json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": "))))
