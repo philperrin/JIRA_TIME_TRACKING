@@ -4,6 +4,8 @@ from datetime import datetime
 from snowflake.snowpark.context import get_active_session
 import requests
 from requests.auth import HTTPBasicAuth
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 import json
 
 TABLE_NAME = "CONFIG_DETAILS"
@@ -37,20 +39,26 @@ def config_modal():
     if submitted:
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
       updated_at = datetime.now()
-      url = f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}"
-      auth = HTTPBasicAuth(user_email_input, api_key)
-      headers = {
-          "Accept": "application/json"
-      }
-      try:
-          response = requests.get(
-              url,
-              headers=headers,
-              auth=auth
-          )
-      except requests.exceptions.RequestException as e:
-          st.error(f"Error connecting to Jira: {e}")
-          st.error(f"Response: {response.text if 'response' in locals() else 'No response'}")
+      session = requests.Session()
+      retry = Retry(connect=3, backoff_factor=0.5)
+      adapter = HTTPAdapter(max_retries=retry)
+      session.mount('http://', adapter)
+      session.mount('https://', adapter)
+      session.get(f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}")
+      #url = f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}"
+      #auth = HTTPBasicAuth(user_email_input, api_key)
+      #headers = {
+      #    "Accept": "application/json"
+      #}
+      #try:
+      #    response = requests.get(
+      #        url,
+      #        headers=headers,
+      #        auth=auth
+      #    )
+      #except requests.exceptions.RequestException as e:
+      #    st.error(f"Error connecting to Jira: {e}")
+      #    st.error(f"Response: {response.text if 'response' in locals() else 'No response'}")
 
       if user_email_input and filter_id and api_key:
           try:
