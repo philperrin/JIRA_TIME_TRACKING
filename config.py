@@ -63,7 +63,7 @@ def config_modal():
               response_dumps = json.dumps(response_json,sort_keys=True,indent=4,separators=(",",": "))
               st.success(response)
               test_response = json.loads(response.text)
-              test_id = test_response['accountId']
+              test_id = test_response[0]
               st.success(test_id)
               st.success(response_json)
               st.success(response_dumps)
