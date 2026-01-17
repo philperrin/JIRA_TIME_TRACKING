@@ -48,11 +48,14 @@ def config_modal():
       """
       active_session.sql(create_secret_sql).collect()
       
-      secret_list = f"""
+      secret_show = f"""
       SHOW SECRETS;
+      """
+      secret_list = f"""
       SELECT LISTAGG("name", ', ') WITHIN GROUP (ORDER BY "name") AS secret_names_string
       FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
       """
+      active_session.sql(secret_show).collect()
       secret_list_res = active_session.sql(secret_list).to_pandas()
       st.success(secret_list_res)
       
