@@ -41,13 +41,12 @@ def config_modal():
     if submitted:
       #First will need to run CREATE OR REPLACE SECRET jira_credentials_username ((NEED TO REMOVE @PHDATA.IO)) TYPE = GENERIC_STRING SECRET_STRING = '{"email": "email", "api_token": "token"}';
       #Then ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration ALLOWED_AUTHENTICATION_SECRETS = (jira_credentials) ENABLED = TRUE;
-      secret_email = "\{ \"email\": \""+user_email_input+"\""
-      secret_token = "\"api_token\": \""+api_key+"\" \};"
+      secret_string = "\{ \"email\": \""+user_email_input+"\",\"api_token\": \""+api_key+"\" \};"
+      #secret_token = "\"api_token\": \""+api_key+"\" \};"
       create_secret_sql = f"""
       CREATE OR REPLACE SECRET {jira_cred_name}
           TYPE = GENERIC_STRING
-          SECRET_STRING = {secret_email} , 
-                            {secret_token}
+          SECRET_STRING = {secret_string}
       """
       update_auth_sec = f"""
       ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration 
