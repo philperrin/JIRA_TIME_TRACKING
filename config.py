@@ -10,7 +10,7 @@ import json
 
 TABLE_NAME = "CONFIG_DETAILS"
 COL1 = "USER_EMAIL" 
-COL2 = "FILTER_ID"
+#COL2 = "FILTER_ID"
 COL3 = "API_KEY" 
 COL4 = "UPDATED_AT"
 COL5 = "JIRA_USER_ID"
@@ -27,18 +27,20 @@ if 'df' not in st.session_state:
 #Config Modal
 @st.dialog("Jira Configuration Details")
 def config_modal():
-  if st.user and "email" in st.user:
-    user_email = st.user["email"]
-  else:
-    user_email = "EMAIL REQUIRED"
+  #if st.user and "email" in st.user:
+    #user_email = st.user["email"]
+  #else:
+    #user_email = "EMAIL REQUIRED"
   with st.form("config_form", clear_on_submit=True):
-    user_email_input = st.text_input("Email", value=user_email)
-    username = user_email_input.split('@')[0]
+    #user_email_input = st.text_input("Email", value=user_email)
+    user_email = st.user["email"]
+    #username = user_email_input.split('@')[0]
+    username = user_email.split('@')[0]
     jira_cred_name = "jira_credentials_"+username
-    filter_id = st.text_input("Jira filter id")
+    #filter_id = st.text_input("Jira filter id")
     api_key = st.text_input("Jira API key")
     submitted = st.form_submit_button("Submit Details")
-    secret_string = "'{ \"email\": \"" + user_email_input + "\" , \"api_token\": \"" + api_key + "\" }';"
+    secret_string = "'{ \"email\": \"" + user_email + "\" , \"api_token\": \"" + api_key + "\" }';"
     url = f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}"
     if submitted:
       create_secret_sql = f"""
@@ -66,10 +68,12 @@ def config_modal():
       """
       active_session.sql(update_auth_sec)
       
-      st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
+      #st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
+      st.session_state["submission_data"] = {"email": user_email, "api_key": api_key}
       updated_at = datetime.now()
       
-      auth = HTTPBasicAuth(user_email_input, api_key)
+      #auth = HTTPBasicAuth(user_email_input, api_key)
+      auth = HTTPBasicAuth(user_email, api_key)
       headers = {
           "Accept": "application/json"
       }
@@ -87,7 +91,8 @@ def config_modal():
           try:
               jira_user_id_r = json.loads(response.text)
               jira_user_id = jira_user_id_r[0]['accountId']
-              insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4},{COL5}) VALUES (UPPER('{user_email_input}'),'{filter_id}','{api_key}','{updated_at}','{jira_user_id}')"
+              #insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4},{COL5}) VALUES (UPPER('{user_email_input}'),'{filter_id}','{api_key}','{updated_at}','{jira_user_id}')"
+              insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL3},{COL4},{COL5}) VALUES (UPPER('{user_email}'),'{api_key}','{updated_at}','{jira_user_id}')"
               active_session.sql(insert_query).collect()
               st.success("Config details saved!")
           except Exception as e:
