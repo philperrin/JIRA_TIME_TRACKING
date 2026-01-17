@@ -38,28 +38,29 @@ def config_modal():
     filter_id = st.text_input("Jira filter id")
     api_key = st.text_input("Jira API key")
     submitted = st.form_submit_button("Submit Details")
+    secret_string = "'{ \"email\": \"" + user_email_input + "\" , \"api_token\": \"" + api_key + "\" }';"
+    url = f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}"
     if submitted:
-      #First will need to run CREATE OR REPLACE SECRET jira_credentials_username ((NEED TO REMOVE @PHDATA.IO)) TYPE = GENERIC_STRING SECRET_STRING = '{"email": "email", "api_token": "token"}';
-      #Then ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration ALLOWED_AUTHENTICATION_SECRETS = (jira_credentials) ENABLED = TRUE;
-      secret_string = "'{ \"email\": \"" + user_email_input + "\" , \"api_token\": \"" + api_key + "\" }';"
-      #secret_token = "\"api_token\": \""+api_key+"\" \};"
       create_secret_sql = f"""
       CREATE OR REPLACE SECRET {jira_cred_name}
           TYPE = GENERIC_STRING
           SECRET_STRING = {secret_string}
       """
+      active_session.sql(create_secret_sql).collect()
+      secret_list = f"""
+      SHOW SECRETS;
+      SELECT LISTAGG("name", ', ') WITHIN GROUP (ORDER BY "name") AS secret_names_string
+      FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
+      """
+      secret_list_res = active_session.sql(secret_list).collect()
       update_auth_sec = f"""
       ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration 
-          SET ALLOWED_AUTHENTICATION_SECRETS = ({jira_cred_name})
+          SET ALLOWED_AUTHENTICATION_SECRETS = ({secret_list_res})
           ENABLED = TRUE;
       """
-      ###create_int = f"CREATE OR REPLACE SECRET {jira_cred_name} TYPE = GENERIC_STRING SECRET_STRING = {"email": "user_email_input, "api_token": '{api_key}'};"
-      active_session.sql(create_secret_sql).collect()
-      ###update_auth_sec = f"ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration ALLOWED_AUTHENTICATION_SECRET = ({jira_cred_name}) ENABLED = TRUE;"
       active_session.sql(update_auth_sec).collect()
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
       updated_at = datetime.now()
-      url = f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}"
       auth = HTTPBasicAuth(user_email_input, api_key)
       headers = {
           "Accept": "application/json"
