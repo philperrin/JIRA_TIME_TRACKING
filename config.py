@@ -33,16 +33,18 @@ def config_modal():
     user_email = "EMAIL REQUIRED"
   with st.form("config_form", clear_on_submit=True):
     user_email_input = st.text_input("Email", value=user_email)
+    username = user_email_input.split('@')[0]
+    jira_cred_name = "jira_credentials_"+username
     filter_id = st.text_input("Jira filter id")
     api_key = st.text_input("Jira API key")
     submitted = st.form_submit_button("Submit Details")
     if submitted:
       #First will need to run CREATE OR REPLACE SECRET jira_credentials_username ((NEED TO REMOVE @PHDATA.IO)) TYPE = GENERIC_STRING SECRET_STRING = '{"email": "email", "api_token": "token"}';
       #Then ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration ALLOWED_AUTHENTICATION_SECRETS = (jira_credentials) ENABLED = TRUE;
-      #create_int = f"CREATE OR REPLACE SECRET jira_credentials_ TYPE = GENERIC_STRING SECRET_STRING = {/'email/': /'{user_email_input}/', /'api_token/': /'{api_key}/'};"
-      #active_session.sql(create_int).collect()
-      #update_auth_sec = f"ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration ALLOWED_AUTHENTICATION_SECRET = (jira_credentials_) ENABLED = TRUE;"
-      #active_session.sql(update_auth_sec).collect()
+      create_int = f"CREATE OR REPLACE SECRET {jira_cred_name} TYPE = GENERIC_STRING SECRET_STRING = {/'email/': /'{user_email_input}/', /'api_token/': /'{api_key}/'};"
+      active_session.sql(create_int).collect()
+      update_auth_sec = f"ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration ALLOWED_AUTHENTICATION_SECRET = ({jira_cred_name}) ENABLED = TRUE;"
+      active_session.sql(update_auth_sec).collect()
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
       updated_at = datetime.now()
       url = f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}"
