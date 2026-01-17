@@ -87,7 +87,8 @@ def config_modal():
           st.error(f"Error connecting to Jira: {e}")
           st.error(f"Response: {response.text if 'response' in locals() else 'No response'}")
 
-      if user_email_input and filter_id and api_key:
+      #if user_email_input and filter_id and api_key:
+      if user_email and api_key:
           try:
               jira_user_id_r = json.loads(response.text)
               jira_user_id = jira_user_id_r[0]['accountId']
