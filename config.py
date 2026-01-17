@@ -56,7 +56,7 @@ def config_modal():
       FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
       """
       active_session.sql(secret_show).collect()
-      secret_list_res = active_session.sql(secret_list).collect()
+      secret_list_res = active_session.sql(secret_list)
       secret_list_res_arr = secret_list_res.collect()[0]['SECRET_NAMES_STRING']
       st.success(secret_list_res_arr)
       
