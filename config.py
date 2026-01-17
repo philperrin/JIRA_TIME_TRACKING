@@ -46,8 +46,8 @@ def config_modal():
       create_secret_sql = f"""
       CREATE OR REPLACE SECRET {jira_cred_name}
           TYPE = GENERIC_STRING
-          SECRET_STRING = \'{ {secret_email} , 
-                            {secret_token} }\';
+          SECRET_STRING = \'\{ {secret_email} , 
+                            {secret_token} \}\';
       """
       update_auth_sec = f"""
       ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration 
