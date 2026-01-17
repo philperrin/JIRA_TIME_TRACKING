@@ -47,20 +47,24 @@ def config_modal():
           SECRET_STRING = {secret_string}
       """
       active_session.sql(create_secret_sql).collect()
+      
       secret_list = f"""
       SHOW SECRETS;
       SELECT LISTAGG("name", ', ') WITHIN GROUP (ORDER BY "name") AS secret_names_string
       FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
       """
       secret_list_res = active_session.sql(secret_list).collect()
+      
       update_auth_sec = f"""
       ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration 
           SET ALLOWED_AUTHENTICATION_SECRETS = ({secret_list_res})
           ENABLED = TRUE;
       """
       active_session.sql(update_auth_sec).collect()
+      
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
       updated_at = datetime.now()
+      
       auth = HTTPBasicAuth(user_email_input, api_key)
       headers = {
           "Accept": "application/json"
