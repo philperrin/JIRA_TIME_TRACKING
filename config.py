@@ -50,7 +50,7 @@ def config_modal():
       """
       update_auth_sec = f"""
       ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration 
-          ALLOWED_AUTHENTICATION_SECRET = '({jira_cred_name})'
+          SET ALLOWED_AUTHENTICATION_SECRET = ({jira_cred_name})
           ENABLED = TRUE;
       """
       ###create_int = f"CREATE OR REPLACE SECRET {jira_cred_name} TYPE = GENERIC_STRING SECRET_STRING = {"email": "user_email_input, "api_token": '{api_key}'};"
