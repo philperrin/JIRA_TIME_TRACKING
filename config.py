@@ -53,7 +53,8 @@ def config_modal():
       SELECT LISTAGG("name", ', ') WITHIN GROUP (ORDER BY "name") AS secret_names_string
       FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
       """
-      secret_list_res = active_session.sql(secret_list).collect()
+      secret_list_res = active_session.sql(secret_list).to_pandas()
+      st.success(secret_list_res)
       
       update_auth_sec = f"""
       ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration 
