@@ -55,17 +55,17 @@ def config_modal():
       SELECT LISTAGG("name", ', ') WITHIN GROUP (ORDER BY "name") AS secret_names_string
       FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
       """
-      active_session.sql(secret_show).collect()
+      active_session.sql(secret_show)
       secret_list_res = active_session.sql(secret_list)
       secret_list_res_arr = secret_list_res.collect()[0]['SECRET_NAMES_STRING']
       st.success(secret_list_res_arr)
       
       update_auth_sec = f"""
       ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration 
-          SET ALLOWED_AUTHENTICATION_SECRETS = ({secret_list_res})
+          SET ALLOWED_AUTHENTICATION_SECRETS = ({secret_list_res_arr})
           ENABLED = TRUE;
       """
-      active_session.sql(update_auth_sec).collect()
+      active_session.sql(update_auth_sec)
       
       st.session_state["submission_data"] = {"email": user_email_input, "filter_id": filter_id, "api_key": api_key}
       updated_at = datetime.now()
