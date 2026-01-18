@@ -131,9 +131,9 @@ headers = {
 }
 params = {
     "jql": '(assignee = currentUser() OR watcher = currentUser()) AND status != Done ORDER BY created ASC',
-    "fields": 'key, summary, status, created, customfield_10201, project'
-    #"maxResults": 200,
-    #"startAt": 0,
+    "fields": 'key, summary, status, created, customfield_10201, project',
+    "maxResults": 200,
+    "startAt": 0,
     "expand": "string"
 }
 try:
