@@ -10,7 +10,7 @@ import json
 
 env = "TEST"
 active_session = get_active_session()
-sess_query = f"USE SCHEMA JIRA_TIME_TRACKING.{schema_var}"
+sess_query = f"USE SCHEMA JIRA_TIME_TRACKING.{env}"
 active_session.sql(sess_query).collect()
 
 st.title("🛠 Time Tracking Configuration")
