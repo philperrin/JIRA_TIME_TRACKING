@@ -98,8 +98,19 @@ if "submission_data" not in st.session_state:
 @st.dialog("Allocation Details")
 def allocation_modal():
   with st.form("allocation_form", clear_on_submit=True):
-    st.markdown("Insert a set of columns here for allocation details")
-    submitted = st.form_submit_button("Save Allocations")
+    st.markdown("Add a project allocation here:")
+    proj_sel = ['One','Two','Three']
+    selected_proj = st.selectbox(
+    'Select project:',
+    proj_sel
+    )
+    hrs_wk = st.number_input(
+        label="Hours per week:",
+    format="%.2f"
+    )
+    proj_start = st.date_input("Effective start:",format="MM/DD/YYYY")
+    proj_end   = st.date_input("Effective end:",format="MM/DD/YYYY")
+    submitted = st.form_submit_button("Save Allocation",)
     if submitted:
       st.rerun()
 
