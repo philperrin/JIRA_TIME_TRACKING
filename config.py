@@ -8,19 +8,9 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import json
 
-
-#sess_query = f"USE SCHEMA JIRA_TIME_TRACKING.{env}"
-#active_session.sql(sess_query).collect()
-
-
 active_session = get_active_session()
 db_var = "JIRA_TIME_TRACKING"
 env = "TEST"
-active_session.sql(f"USE DATABASE {db_var};").collect()
-active_session.sql(f"USE SCHEMA {env};").collect()
-
-
-
 
 st.title("🛠 Time Tracking Configuration")
 st.text("Use this page to provide a Jira API token and update your weekly project allocations.")
@@ -146,10 +136,10 @@ with col2:
 
 user_email = st.user["email"].upper()
 api_query = f"""
-SELECT API_KEY FROM JIRA_TIME_TRACKING.{env}.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
+SELECT API_KEY FROM {dv_var}.{env}.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
 """
 api_query_count = f"""
-SELECT COUNT(*) AS row_count FROM JIRA_TIME_TRACKING.{env}.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
+SELECT COUNT(*) AS row_count FROM {db_var}.{env}.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
 """
 st.header("Jira Issues", divider="gray")
 try:
