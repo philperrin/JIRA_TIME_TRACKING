@@ -114,7 +114,7 @@ def allocation_modal():
     submitted = st.form_submit_button("Save Allocation",)
     if submitted:
         st.rerun()
-    if 1===1:
+    if 1==1:
         try:
             TABLE_NAME = "ALLOCATION_DETAILS"
             COL1 = "USER_EMAIL" 
