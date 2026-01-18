@@ -149,7 +149,7 @@ issue_result = json.loads(response2.text)
 
 normalized_df = pd.json_normalize(issue_result['issues'])
 base_url = "https://phdata.atlassian.net/browse/"
-normalized_df['link'] = base_url + normalized_df['key'].str + '#' + df['key']
+normalized_df['link'] = base_url + normalized_df['key'] + '#' + df['key']
 columns_to_show = ['fields.project.key','link', 'fields.summary']
 
 filtered_df = normalized_df[columns_to_show]
