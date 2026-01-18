@@ -148,19 +148,18 @@ issue_result = json.loads(response2.text)
 
 
 normalized_df = pd.json_normalize(issue_result['issues'])
-#columns_to_show = ['fields.project.key','key', 'fields.summary']
+columns_to_show = ['fields.project.key','key', 'fields.summary']
 
-#filtered_df = normalized_df[columns_to_show]
+filtered_df = normalized_df[columns_to_show]
 
-#filtered_df['link'] = df['fields.project.key'] + '#' + df['key']
+filtered_df['link'] = df['self'] + '#' + df['key']
 
-st.dataframe(normalized_df,hide_index=True,
-#st.dataframe(filtered_df,hide_index=True,
-    #column_config={
-    #"fields.project.key": "Project Key",
-    #"link": "Issue Key",
-    #"fields.summary": "Summary",
-#}
+st.dataframe(filtered_df,hide_index=True,
+    column_config={
+    "fields.project.key": "Project Key",
+    "link": "Issue Key",
+    "fields.summary": "Summary",
+}
 )
 
       
