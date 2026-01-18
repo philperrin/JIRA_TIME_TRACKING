@@ -222,8 +222,8 @@ with st.expander("Components to build:"):
 
 with st.expander("Functionalities:"):
   st.markdown(":firecracker:   Button to pop up base config modal")
-  st.markdown(":white_check_mark:   Modal to collect API key")
-  st.markdown(":white_check_mark:   On modal submit -> collect API key, user Jira id and store with config details")
+  st.markdown("..:white_check_mark:   Modal to collect API key")
+  st.markdown("..:white_check_mark:   On modal submit -> collect API key, user Jira id and store with config details")
   st.markdown(":firecracker:   Button to pop up allocation modal")
-  st.markdown("  :boom:   Modal has input table for: Jira project id, client name, project name, weekly hrs, effective dates")
-  st.markdown("  :boom:   If allocation table has data in it, display current allocation details - including link to Jira board")
+  st.markdown("..:boom:   Modal has input table for: Jira project id, client name, project name, weekly hrs, effective dates")
+  st.markdown("..:boom:   If allocation table has data in it, display current allocation details")
