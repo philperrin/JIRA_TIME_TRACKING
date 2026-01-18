@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("Reports")
+st.title("📊 Reports")
 
 st.text("Show user insights.")
 
