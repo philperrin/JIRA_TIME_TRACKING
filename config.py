@@ -148,21 +148,19 @@ issue_result = json.loads(response2.text)
 
 
 normalized_df = pd.json_normalize(issue_result['issues'])
-
-
-normalized_df['link'] = normalized_df['self'] + '#' + normalized_df['key']
-columns_to_show = ['fields.project.key','key','link', 'fields.summary']
+base_url = "https://phdata.atlassian.net/browse/"
+normalized_df['link'] = base_url + normalized_df['key'].str + '#' + df['key']
+columns_to_show = ['fields.project.key','link', 'fields.summary']
 
 filtered_df = normalized_df[columns_to_show]
 
 st.dataframe(filtered_df,hide_index=True,
     column_config={
     "fields.project.key": "Project Key",
-    "key": "Issue Key",
     "link": st.column_config.LinkColumn(
-        "Link", # The header for the column
+        "Issue Key", # The header for the column
         # Regex to extract the text after '#'
-        display_text=r"https://.*?#(.+)$"
+        display_text=r".*#(.+)$"
     ),
     "fields.summary": "Summary",
 }
