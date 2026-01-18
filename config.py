@@ -8,6 +8,10 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import json
 
+st.set_page_config(
+    layout="wide"
+)
+
 active_session = get_active_session()
 db_var = "JIRA_TIME_TRACKING"
 env = "TEST"
