@@ -15,7 +15,7 @@ COL3 = "UPDATED_AT"
 COL4 = "JIRA_USER_ID"
 
 
-st.title("Time Tracking Configuration")
+st.title("🛠 Time Tracking Configuration")
 st.text("Use this page to provide your Jira API key and update your weekly project allocations.")
 
 active_session = get_active_session()
