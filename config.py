@@ -113,40 +113,40 @@ with col2:
 
 st.text("Here are your current Jira issues:")
 user_email = st.user["email"].upper()
-st.success(user_email)
+#st.success(user_email)
 api_query = f"""
 SELECT API_KEY FROM JIRA_TIME_TRACKING.TEST.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
 """
 active_session.sql(api_query).collect()
 api_query_res = active_session.sql(api_query)
 api_query_res_arr = api_query_res.collect()[0]['API_KEY']
-st.success(api_query_res_arr)
-
-      #GET_ISSUES = "https://phdata.atlassian.net/rest/api/3/search"
+#st.success(api_query_res_arr)
+GET_ISSUES = "https://phdata.atlassian.net/rest/api/3/search"
       #url = f"https://phdata.atlassian.net/rest/api/3/issue"
       #if there is no api_key then do not try
       #if there is an api_key then try:
-      #auth = HTTPBasicAuth(user_email, api_key)
-      #headers = {
-      #    "Accept": "application/json"
-      #}
-      #params = {
-      #    "jql": '(assignee = currentUser() OR watcher = currentUser()) AND status != Done ORDER BY created ASC',
-      #    "fields": 'key, summary, status, created, customfield_10201, project'
-      #    "maxResults": 200,
-      #    "startAt": 0,
-      #    "expand": "string"
-      #}
-      #try:
-      #    response = requests.get(
-      #        GET_ISSUES,
-      #        headers=headers,
-      #        params=params,
-      #        auth=auth
-      #    )
-      #except requests.exceptions.RequestException as e:
-      #    st.error(f"Error connecting to Jira: {e}")
-      #    st.error(f"Response: {response.text if 'response' in locals() else 'No response'}")
+auth = HTTPBasicAuth(user_email, api_query_res_arr)
+headers = {
+    "Accept": "application/json"
+}
+params = {
+    "jql": '(assignee = currentUser() OR watcher = currentUser()) AND status != Done ORDER BY created ASC',
+    "fields": 'key, summary, status, created, customfield_10201, project'
+    "maxResults": 200,
+    "startAt": 0,
+    "expand": "string"
+}
+try:
+    response = requests.get(
+        GET_ISSUES,
+        headers=headers,
+        params=params,
+        auth=auth
+    )
+    st.success(len(response))
+except requests.exceptions.RequestException as e:
+    st.error(f"Error connecting to Jira: {e}")
+    st.error(f"Response: {response.text if 'response' in locals() else 'No response'}")
       
 
 df = pd.DataFrame(
