@@ -114,11 +114,9 @@ with col2:
 st.text("Here are your current Jira issues:")
 df = pd.DataFrame(
     {
+        "project": ["Roadmap", "Extras", "Issues"],
         "key": ["Roadmap", "Extras", "Issues"],
         "name": ["Roadmap", "Extras", "Issues"],
-        "status": ["Roadmap", "Extras", "Issues"],
-        "created": ["Roadmap", "Extras", "Issues"],
-        "project": ["Roadmap", "Extras", "Issues"],
         "ms_billing_ref": ["Roadmap", "Extras", "Issues"],
     }
 )
@@ -126,11 +124,9 @@ df = pd.DataFrame(
 st.dataframe(
     df,
     column_config={
+        "project": "Project Code",
         "key": "Key",
         "name": "Name",
-        "status": "Status",
-        "created": "Created",
-        "project": "Project Code",
         "ms_billing_ref": "MS Billing Ref",
     },
     hide_index=True,
