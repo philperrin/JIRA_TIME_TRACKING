@@ -128,7 +128,7 @@ headers = {
     "Accept": "application/json"
 }
 params = {
-    "jql": '(assignee = currentUser() OR watcher = currentUser()) AND status != Done ORDER BY project ASC, created ASC',
+    "jql": '(assignee = currentUser() OR watcher = currentUser()) AND status != Done ORDER BY key ASC',
     "fields": 'key, summary, status, created, customfield_10201, project',
     "maxResults": 200,
     "startAt": 0,
@@ -150,16 +150,14 @@ issue_result = json.loads(response2.text)
 normalized_df = pd.json_normalize(issue_result['issues'])
 base_url = "https://phdata.atlassian.net/browse/"
 normalized_df['link'] = base_url + normalized_df['key'] + '#' + normalized_df['key']
-columns_to_show = ['fields.project.key','link', 'fields.summary']
+columns_to_show = ['link', 'fields.summary']
 
 filtered_df = normalized_df[columns_to_show]
 
 st.dataframe(filtered_df,hide_index=True,
     column_config={
-    "fields.project.key": "Project Key",
     "link": st.column_config.LinkColumn(
-        "Issue Key", # The header for the column
-        # Regex to extract the text after '#'
+        "Issue Key",
         display_text=r".*#(.+)$"
     ),
     "fields.summary": "Summary",
