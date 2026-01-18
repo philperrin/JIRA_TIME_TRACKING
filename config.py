@@ -111,6 +111,38 @@ with col2:
   if st.button("Add Allocations", use_container_width=True):
     allocation_modal()
 
+st.text("Here are your current Jira issues:")
+df = pd.DataFrame(
+    {
+        "key": ["Roadmap", "Extras", "Issues"],
+        "name": ["Roadmap", "Extras", "Issues"],
+        "status": ["Roadmap", "Extras", "Issues"],
+        "created": ["Roadmap", "Extras", "Issues"],
+        "project": ["Roadmap", "Extras", "Issues"],
+        "ms_billing_ref": ["Roadmap", "Extras", "Issues"],
+    }
+)
+
+st.dataframe(
+    df,
+    column_config={
+        "key": "Key",
+        "name": "Name",
+        "status": "Status",
+        "created": "Created",
+        "project": "Project Code",
+        "ms_billing_ref": "MS Billing Ref",
+    },
+    hide_index=True,
+)
+      #params = {
+      #    "jql": '(assignee = currentUser() OR watcher = currentUser()) AND status != Done ORDER BY created ASC',
+      #    "fields": 'key, summary, status, created, customfield_10201, project'
+      #    "maxResults": 200,
+      #    "startAt": 0,
+      #    "expand": "string"
+      #}
+
 with st.expander("Components to build:"):
   st.markdown(":white_check_mark:   Input user email")
   st.markdown(":white_check_mark:   Input Jira filter id")
