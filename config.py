@@ -118,7 +118,7 @@ SELECT API_KEY FROM JIRA_TIME_TRACKING.TEST.CONFIG_DETAILS_LATEST WHERE USER_EMA
 """
 active_session.sql(api_query).collect()
 api_query_res = active_session.sql(api_query)
-api_query_res_arr = secret_list_res.collect()[0]['API_KEY']
+api_query_res_arr = api_query_res.collect()[0]['API_KEY']
 st.success(api_query_res_arr)
 
       #GET_ISSUES = "https://phdata.atlassian.net/rest/api/3/search"
