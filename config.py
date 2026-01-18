@@ -171,7 +171,7 @@ try:
         unique_project_count = len(unique_projects)
 
         st.text(f"Below you will find the Jira issues that you are either assigned to or are watching, grouped by project.\n\nYou currrently have {issue_count} Jira issues in {unique_project_count} projects. You may bill time against each of these issues on the main 'Log time to Jira' page.")
-
+        st.text("You may click on any of these issues to change the assignee, status, or to stop watching them.")
 
 
 
