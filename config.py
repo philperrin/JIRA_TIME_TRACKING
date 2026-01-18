@@ -112,9 +112,9 @@ with col2:
     allocation_modal()
 
 st.text("Here are your current Jira issues:")
-user_email = st.user["email"]
+user_email = st.user["email"].upper()
 api_query = f"""
-SELECT API_KEY WHERE USER_EMAIL = {user_email} FROM JIRA_TIME_TRACKING.TEST.CONFIG_DETAILS_LATEST
+SELECT API_KEY WHERE USER_EMAIL = \'{user_email}\' FROM JIRA_TIME_TRACKING.TEST.CONFIG_DETAILS_LATEST
 """
 active_session.sql(api_query).collect()
 api_query_res = active_session.sql(api_query)
