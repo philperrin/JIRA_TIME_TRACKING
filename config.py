@@ -8,17 +8,13 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import json
 
-TABLE_NAME = "CONFIG_DETAILS"
-COL1 = "USER_EMAIL" 
-COL2 = "API_KEY" 
-COL3 = "UPDATED_AT"
-COL4 = "JIRA_USER_ID"
-
+env = "TEST"
+active_session = get_active_session()
+sess_query = f"USE SCHEMA JIRA_TIME_TRACKING.{schema_var}"
+active_session.sql(sess_query).collect()
 
 st.title("🛠 Time Tracking Configuration")
-st.text("Use this page to provide your Jira API token and update your weekly project allocations.")
-
-active_session = get_active_session()
+st.text("Use this page to provide a Jira API token and update your weekly project allocations.")
 
 if 'df' not in st.session_state:
     st.session_state.df = pd.DataFrame(columns=['USER_EMAIL','FILTER_ID','API_KEY','UPDATED_AT'])
@@ -80,6 +76,11 @@ def config_modal():
 
       if user_email and api_key:
           try:
+              TABLE_NAME = "CONFIG_DETAILS"
+              COL1 = "USER_EMAIL" 
+              COL2 = "API_KEY" 
+              COL3 = "UPDATED_AT"
+              COL4 = "JIRA_USER_ID"
               jira_user_id_r = json.loads(response.text)
               jira_user_id = jira_user_id_r[0]['accountId']
               insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email}'),'{api_key}','{updated_at}','{jira_user_id}')"
@@ -112,8 +113,18 @@ def allocation_modal():
     proj_end   = st.date_input("End date:",format="MM/DD/YYYY")
     submitted = st.form_submit_button("Save Allocation",)
     if submitted:
-      st.rerun()
-
+        st.rerun()
+    if 1===1:
+        try:
+            TABLE_NAME = "ALLOCATION_DETAILS"
+            COL1 = "USER_EMAIL" 
+            COL2 = "API_KEY" 
+            COL3 = "UPDATED_AT"
+            COL4 = "JIRA_USER_ID"
+        except Exception as e:
+            st.error(f"Error: {e}")
+    else:
+        st.warning("Allocation error")
 
 #Top of page
 col1, col2 = st.columns(2)
@@ -126,11 +137,10 @@ with col2:
 
 user_email = st.user["email"].upper()
 api_query = f"""
-SELECT API_KEY FROM JIRA_TIME_TRACKING.TEST.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
+SELECT API_KEY FROM JIRA_TIME_TRACKING.{env}.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
 """
-#active_session.sql(api_query).collect()
 api_query_count = f"""
-SELECT COUNT(*) AS row_count FROM JIRA_TIME_TRACKING.TEST.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
+SELECT COUNT(*) AS row_count FROM JIRA_TIME_TRACKING.{env}.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
 """
 st.header("Jira Issues", divider="gray")
 try:
@@ -200,21 +210,19 @@ except Exception as e:
 
 st.header("Project Allocations", divider="gray")
 allocation_container = st.container(border=True)
-allocation_container.write("If there are allocations for the user, populate them here.")
+allocation_container.write("If user has allocations, populate them here.")
 
-with st.expander("Components to build:"):
-  st.markdown(":white_check_mark:   Input user email")
-  st.markdown(":white_check_mark:   Input Jira filter id")
-  st.markdown(":white_check_mark:   Input Jira API key")
-  st.markdown(":white_check_mark:   Mask Jira API key")
-  st.markdown(":white_check_mark:   Create view showing user's most recent submission")
-  st.markdown(":white_check_mark:   Collect user Jira id (requires user email and API key)")
-  st.markdown(":white_check_mark:   For issues: use (assigned or watching) and != Done")
-  st.markdown(":white_check_mark:   Build a display of issues")
-  st.markdown(":white_check_mark:   Hyperlink issue key")  
-  st.markdown(":pencil2:   Input allocations")
-  
-
+#with st.expander("Components to build:"):
+#  st.markdown(":white_check_mark:   Input user email")
+#  st.markdown(":white_check_mark:   Input Jira filter id")
+#  st.markdown(":white_check_mark:   Input Jira API key")
+#  st.markdown(":white_check_mark:   Mask Jira API key")
+#  st.markdown(":white_check_mark:   Create view showing user's most recent submission")
+#  st.markdown(":white_check_mark:   Collect user Jira id (requires user email and API key)")
+#  st.markdown(":white_check_mark:   For issues: use (assigned or watching) and != Done")
+#  st.markdown(":white_check_mark:   Build a display of issues")
+#  st.markdown(":white_check_mark:   Hyperlink issue key")  
+#  st.markdown(":white_check_mark:   Input allocations")
 with st.expander("Functionalities:"):
   st.markdown(":firecracker:   Button to pop up base config modal")
   st.markdown("..:white_check_mark:   Modal to collect API key")
