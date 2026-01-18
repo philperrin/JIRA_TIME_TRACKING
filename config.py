@@ -97,8 +97,8 @@ if "submission_data" not in st.session_state:
 #Allocation Modal
 @st.dialog("Allocation Details")
 def allocation_modal():
+  st.markdown("Input details for a scheduled project allocation here. Submit this form once per project. These details are optional and only used on the reporting tab.")
   with st.form("allocation_form", clear_on_submit=True):
-    st.markdown("Add a project allocation here:")
     proj_sel = ['One','Two','Three']
     selected_proj = st.selectbox(
     'Select project:',
@@ -108,8 +108,8 @@ def allocation_modal():
         label="Hours per week:",
     format="%.2f"
     )
-    proj_start = st.date_input("Effective start:",format="MM/DD/YYYY")
-    proj_end   = st.date_input("Effective end:",format="MM/DD/YYYY")
+    proj_start = st.date_input("Start date:",format="MM/DD/YYYY")
+    proj_end   = st.date_input("End date:",format="MM/DD/YYYY")
     submitted = st.form_submit_button("Save Allocation",)
     if submitted:
       st.rerun()
@@ -121,7 +121,7 @@ with col1:
   if st.button("Add API Token", use_container_width=True):
     config_modal()
 with col2:
-  if st.button("Add Allocations", use_container_width=True):
+  if st.button("Add Project Allocations", use_container_width=True):
     allocation_modal()
 
 #Check if user has an API_KEY.
