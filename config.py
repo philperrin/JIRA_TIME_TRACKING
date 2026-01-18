@@ -8,10 +8,19 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import json
 
-env = "TEST"
+
+#sess_query = f"USE SCHEMA JIRA_TIME_TRACKING.{env}"
+#active_session.sql(sess_query).collect()
+
+
 active_session = get_active_session()
-sess_query = f"USE SCHEMA JIRA_TIME_TRACKING.{env}"
-active_session.sql(sess_query).collect()
+db_var = "JIRA_TIME_TRACKING"
+env = "TEST"
+active_session.sql(f"USE DATABASE {db_var};").collect()
+active_session.sql(f"USE SCHEMA {env};").collect()
+
+
+
 
 st.title("🛠 Time Tracking Configuration")
 st.text("Use this page to provide a Jira API token and update your weekly project allocations.")
