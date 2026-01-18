@@ -1,5 +1,5 @@
 import streamlit as st
-st.title("Log time to Jira")
+st.title("⏰ Log time to Jira")
 
 st.text("Use this page to assign your time to specific tasks in Jira.")
 
