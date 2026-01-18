@@ -112,6 +112,42 @@ with col2:
     allocation_modal()
 
 st.text("Here are your current Jira issues:")
+      user_email = st.user["email"]
+      api_query = f"""
+      SELECT API_KEY WHERE USER_EMAIL = {user_email} FROM JIRA_TIME_TRACKING.TEST.CONFIG_DETAILS_LATEST
+      """
+      active_session.sql(api_query).collect()
+      api_query_res = active_session.sql(api_query)
+      api_query_res_arr = secret_list_res.collect()[0]['API_KEY']
+      st.success(api_query_res_arr)
+
+      #GET_ISSUES = "https://phdata.atlassian.net/rest/api/3/search"
+      #url = f"https://phdata.atlassian.net/rest/api/3/issue"
+      #if there is no api_key then do not try
+      #if there is an api_key then try:
+      #auth = HTTPBasicAuth(user_email, api_key)
+      #headers = {
+      #    "Accept": "application/json"
+      #}
+      #params = {
+      #    "jql": '(assignee = currentUser() OR watcher = currentUser()) AND status != Done ORDER BY created ASC',
+      #    "fields": 'key, summary, status, created, customfield_10201, project'
+      #    "maxResults": 200,
+      #    "startAt": 0,
+      #    "expand": "string"
+      #}
+      #try:
+      #    response = requests.get(
+      #        GET_ISSUES,
+      #        headers=headers,
+      #        params=params,
+      #        auth=auth
+      #    )
+      #except requests.exceptions.RequestException as e:
+      #    st.error(f"Error connecting to Jira: {e}")
+      #    st.error(f"Response: {response.text if 'response' in locals() else 'No response'}")
+      
+
 df = pd.DataFrame(
     {
         "project": ["Roadmap", "Extras", "Issues"],
@@ -131,13 +167,7 @@ st.dataframe(
     },
     hide_index=True,
 )
-      #params = {
-      #    "jql": '(assignee = currentUser() OR watcher = currentUser()) AND status != Done ORDER BY created ASC',
-      #    "fields": 'key, summary, status, created, customfield_10201, project'
-      #    "maxResults": 200,
-      #    "startAt": 0,
-      #    "expand": "string"
-      #}
+      
 
 with st.expander("Components to build:"):
   st.markdown(":white_check_mark:   Input user email")
