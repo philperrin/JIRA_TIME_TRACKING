@@ -128,7 +128,7 @@ headers = {
     "Accept": "application/json"
 }
 params = {
-    "jql": '(assignee = currentUser() OR watcher = currentUser()) AND status != Done ORDER BY created ASC',
+    "jql": '(assignee = currentUser() OR watcher = currentUser()) AND status != Done ORDER BY project ASC, created ASC',
     "fields": 'key, summary, status, created, customfield_10201, project',
     "maxResults": 200,
     "startAt": 0,
