@@ -166,10 +166,11 @@ with st.expander("Components to build:"):
   st.markdown(":white_check_mark:   Mask Jira API key")
   st.markdown(":white_check_mark:   Create view showing user's most recent submission")
   st.markdown(":white_check_mark:   Collect user Jira id (requires user email and API key)")
+  st.markdown(":white_check_mark:   For issues: use (assigned or watching) and != Done")
   st.markdown(":white_check_mark:   Build a display of issues")
   st.markdown(":pencil2:   Hyperlink issue key")  
   st.markdown(":pencil2:   Input allocations")
-  st.markdown(":pencil2:   For issues: use (assigned or watching) and != Done")
+  
 
 with st.expander("Functionalities:"):
   st.markdown(":firecracker:   Button to pop up base config modal")
