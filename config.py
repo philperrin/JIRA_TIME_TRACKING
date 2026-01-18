@@ -152,7 +152,7 @@ columns_to_show = ['fields.project.key','key', 'fields.summary']
 
 filtered_df = normalized_df[columns_to_show]
 
-filtered_df['link'] = df['self'] + '#' + df['key']
+filtered_df['link'] = filtered_df['self'] + '#' + filtered_df['key']
 
 st.dataframe(filtered_df,hide_index=True,
     column_config={
