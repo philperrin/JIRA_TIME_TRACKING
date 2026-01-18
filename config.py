@@ -32,14 +32,14 @@ def config_modal():
     url = f"https://phdata.atlassian.net/rest/api/3/user/search?query={user_email}"
     if submitted:
       create_secret_sql = f"""
-      CREATE OR REPLACE SECRET {jira_cred_name}
+      CREATE OR REPLACE SECRET {db_var}.{env}.{jira_cred_name}
           TYPE = GENERIC_STRING
           SECRET_STRING = {secret_string}
       """
       active_session.sql(create_secret_sql).collect()
       
       secret_show = f"""
-      SHOW SECRETS;
+      SHOW SECRETS IN {db_var}.{env};
       """
       secret_list = f"""
       SELECT LISTAGG("name", ', ') WITHIN GROUP (ORDER BY "name") AS secret_names_string
