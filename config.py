@@ -114,7 +114,7 @@ with col2:
 #Check if user has an API_KEY.
 #If there is no api_key then none of this happens.
 #If there is an api_key then try:
-st.text("Here are your current Jira issues:")
+
 user_email = st.user["email"].upper()
 api_query = f"""
 SELECT API_KEY FROM JIRA_TIME_TRACKING.TEST.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
@@ -153,7 +153,8 @@ normalized_df['link'] = base_url + normalized_df['key'] + '#' + normalized_df['k
 columns_to_show = ['link', 'fields.summary']
 
 filtered_df = normalized_df[columns_to_show]
-
+issue_count = len(filtered_df)
+st.text(f"You currently are assigned to or are watching {issue_count} issues.")
 st.dataframe(filtered_df,hide_index=True,
     column_config={
     "link": st.column_config.LinkColumn(
