@@ -85,6 +85,7 @@ def config_modal():
               insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email}'),'{api_key}','{updated_at}','{jira_user_id}')"
               active_session.sql(insert_query).collect()
               st.success("API token securely stored and configuration complete!")
+              st.rerun()
           except Exception as e:
               st.error(f"Error: {e}")
       else:
@@ -190,7 +191,7 @@ try:
     else:
         st.warning("Please add an API token to generate a summary of Jira issues.")
 except Exception as e:
-    st.error(f"Error: {e}")
+    st.warning("Please add an API token to generate a summary of Jira issues.")
 
 with st.expander("Components to build:"):
   st.markdown(":white_check_mark:   Input user email")
