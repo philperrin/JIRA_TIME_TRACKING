@@ -204,6 +204,9 @@ try:
 except Exception as e:
     st.warning("Please add an API token to generate a summary of Jira issues.")
 
+allocation_container = st.container(border=True)
+allocation_container.write("If there are allocations for the user, populate them here.")
+
 with st.expander("Components to build:"):
   st.markdown(":white_check_mark:   Input user email")
   st.markdown(":white_check_mark:   Input Jira filter id")
