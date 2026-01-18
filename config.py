@@ -136,7 +136,7 @@ with col2:
 
 user_email = st.user["email"].upper()
 api_query = f"""
-SELECT API_KEY FROM {dv_var}.{env}.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
+SELECT API_KEY FROM {db_var}.{env}.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
 """
 api_query_count = f"""
 SELECT COUNT(*) AS row_count FROM {db_var}.{env}.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
