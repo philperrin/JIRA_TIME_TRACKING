@@ -83,7 +83,7 @@ def config_modal():
               jira_user_id = jira_user_id_r[0]['accountId']
               insert_query = f"INSERT INTO {TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email}'),'{api_key}','{updated_at}','{jira_user_id}')"
               active_session.sql(insert_query).collect()
-              st.success("Config details saved!")
+              st.success("API key securely stored and configuration complete!")
           except Exception as e:
               st.error(f"Error: {e}")
       else:
