@@ -115,7 +115,7 @@ def allocation_modal():
       st.rerun()
 
 
-#Standard Page
+#Top of page
 col1, col2 = st.columns(2)
 with col1:
   if st.button("Add API Token", use_container_width=True):
@@ -124,21 +124,15 @@ with col2:
   if st.button("Add Project Allocations", use_container_width=True):
     allocation_modal()
 
-#Check if user has an API_KEY.
-#If there is no api_key then none of this happens.
-#If there is an api_key then try:
-
-
-
 user_email = st.user["email"].upper()
 api_query = f"""
 SELECT API_KEY FROM JIRA_TIME_TRACKING.TEST.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
 """
-active_session.sql(api_query).collect()
+#active_session.sql(api_query).collect()
 api_query_count = f"""
 SELECT COUNT(*) AS row_count FROM JIRA_TIME_TRACKING.TEST.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
 """
-
+st.header("Jira Issues", divider="gray")
 try:
     api_count = active_session.sql(api_query_count).to_pandas()
     if not api_count.empty:
@@ -204,6 +198,7 @@ try:
 except Exception as e:
     st.warning("Please add an API token to generate a summary of Jira issues.")
 
+st.header("Project Allocations", divider="gray")
 allocation_container = st.container(border=True)
 allocation_container.write("If there are allocations for the user, populate them here.")
 
