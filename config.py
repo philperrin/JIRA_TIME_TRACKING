@@ -151,11 +151,16 @@ normalized_df = pd.json_normalize(issue_result['issues'])
 columns_to_show = ['fields.project.key','key', 'fields.summary']
 
 filtered_df = normalized_df[columns_to_show]
-st.dataframe(filtered_df,hide_index=True,column_config={
-    "fields.project.key": "Project Key",
-    "key": "Issue Key",
-    "fields.summary": "Summary",
-})
+
+#filtered_df['link'] = df['fields.project.key'] + '#' + df['key']
+
+st.dataframe(filtered_df,hide_index=True,
+    #column_config={
+    #"fields.project.key": "Project Key",
+    #"link": "Issue Key",
+    #"fields.summary": "Summary",
+#}
+)
 
       
 
