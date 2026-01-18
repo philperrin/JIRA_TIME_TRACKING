@@ -111,20 +111,18 @@ with col2:
   if st.button("Add Allocations", use_container_width=True):
     allocation_modal()
 
+#Check if user has an API_KEY.
+#If there is no api_key then none of this happens.
+#If there is an api_key then try:
 st.text("Here are your current Jira issues:")
 user_email = st.user["email"].upper()
-#st.success(user_email)
 api_query = f"""
 SELECT API_KEY FROM JIRA_TIME_TRACKING.TEST.CONFIG_DETAILS_LATEST WHERE USER_EMAIL = \'{user_email}\';
 """
 active_session.sql(api_query).collect()
 api_query_res = active_session.sql(api_query)
 api_query_res_arr = api_query_res.collect()[0]['API_KEY']
-#st.success(api_query_res_arr)
-GET_ISSUES = "https://phdata.atlassian.net/rest/api/3/search"
-      #url = f"https://phdata.atlassian.net/rest/api/3/issue"
-      #if there is no api_key then do not try
-      #if there is an api_key then try:
+GET_ISSUES = "https://phdata.atlassian.net/rest/api/3/search/jql"
 auth = HTTPBasicAuth(user_email, api_query_res_arr)
 headers = {
     "Accept": "application/json"
@@ -137,37 +135,28 @@ params = {
     "expand": "string"
 }
 try:
-    response = requests.get(
+    response2 = requests.get(
         GET_ISSUES,
         headers=headers,
         params=params,
         auth=auth
     )
-    st.success(len(response))
 except requests.exceptions.RequestException as e:
     st.error(f"Error connecting to Jira: {e}")
-    st.error(f"Response: {response.text if 'response' in locals() else 'No response'}")
-      
+    st.error(f"Response: {response2.text if 'response' in locals() else 'No response'}")
+issue_result = json.loads(response2.text)
 
-df = pd.DataFrame(
-    {
-        "project": ["Roadmap", "Extras", "Issues"],
-        "key": ["Roadmap", "Extras", "Issues"],
-        "name": ["Roadmap", "Extras", "Issues"],
-        "ms_billing_ref": ["Roadmap", "Extras", "Issues"],
-    }
-)
 
-st.dataframe(
-    df,
-    column_config={
-        "project": "Project Code",
-        "key": "Key",
-        "name": "Name",
-        "ms_billing_ref": "MS Billing Ref",
-    },
-    hide_index=True,
-)
+normalized_df = pd.json_normalize(issue_result['issues'])
+columns_to_show = ['fields.project.key','key', 'fields.summary']
+
+filtered_df = normalized_df[columns_to_show]
+st.dataframe(filtered_df,hide_index=True,column_config={
+    "fields.project.key": "Project Key",
+    "key": "Issue Key",
+    "fields.summary": "Summary",
+})
+
       
 
 with st.expander("Components to build:"):
@@ -177,7 +166,8 @@ with st.expander("Components to build:"):
   st.markdown(":white_check_mark:   Mask Jira API key")
   st.markdown(":white_check_mark:   Create view showing user's most recent submission")
   st.markdown(":white_check_mark:   Collect user Jira id (requires user email and API key)")
-  st.markdown(":pencil2:   Build a paginated display of issues")
+  st.markdown(":white_check_mark:   Build a display of issues")
+  st.markdown(":pencil2:   Hyperlink issue key")  
   st.markdown(":pencil2:   Input allocations")
   st.markdown(":pencil2:   For issues: use (assigned or watching) and != Done")
 
