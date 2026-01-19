@@ -9,7 +9,7 @@ from urllib3.util.retry import Retry
 import json
 
 st.set_page_config(
-    layout="wide"
+    layout="centered"
 )
 
 active_session = get_active_session()
