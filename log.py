@@ -5,7 +5,8 @@ st.title("⏰ Log time to Jira")
 st.text("Use this page to assign your time to specific tasks in Jira.")
 
 with st.expander("First time here?"):
-  st.markdown("Put in some 'Read Me' info here.")
+  st.markdown("Watch this quick video.")
+  st.markdown("Basic 'Getting started' instructions.")
 
 with st.expander("Components to build:"):
   st.markdown(":pencil2:   Quick summary - hrs in Jira for day and week")
