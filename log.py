@@ -16,11 +16,11 @@ with st.expander("Components to build:"):
 
 with st.expander("Functionalities:"):
   st.markdown(":firecracker:   Time log input device")
-  st.markdown("  :boom:   Only show if config details present")
-  st.markdown("  :boom:   Show input elements: date (cal input), task (dropdown from allocations), start (time), end (time), capture button")
-  st.markdown("  :boom:   Capture dataframe: each time capture button is clicked, add log details to dataframe")
-  st.markdown("  :boom:   Submit dataframe: send each log details to Jira, store log details to table (with extra details)")
+  st.markdown("&nbsp;&nbsp;:boom:   Only show if config details present")
+  st.markdown("&nbsp;&nbsp;:boom:   Show input elements: date (cal input), task (dropdown from allocations), start (time), end (time), capture button")
+  st.markdown("&nbsp;&nbsp;:boom:   Capture dataframe: each time capture button is clicked, add log details to dataframe")
+  st.markdown("&nbsp;&nbsp;:boom:   Submit dataframe: send each log details to Jira, store log details to table (with extra details)")
   st.markdown(":firecracker:   Create new Jira")
-  st.markdown("  :boom:   Modal to create new Jira (drop down from current projects, assigns to self, etc)")
-  st.markdown("  :boom:   Then runs the script to pull in jiras based on filter.")
+  st.markdown("&nbsp;&nbsp;:boom:   Modal to create new Jira (drop down from current projects, assigns to self, etc)")
+  st.markdown("&nbsp;&nbsp;:boom:   Then runs the script to pull in jiras based on filter.")
   
