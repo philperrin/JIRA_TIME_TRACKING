@@ -1,5 +1,9 @@
 import streamlit as st
 
+st.set_page_config(
+    layout="wide"
+)
+
 st.title("📊 Reports")
 
 st.text("Show user insights.")
