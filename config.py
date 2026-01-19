@@ -130,11 +130,11 @@ def allocation_modal():
         st.warning("Allocation error")
 
 #Top of page
-col1, col2 = st.columns(2)
-with col1:
+col1,col2,col3,col4 = st.columns(4)
+with col2:
   if st.button("Add API Token", use_container_width=True):
     config_modal()
-with col2:
+with col3:
   if st.button("Add Project Allocations", use_container_width=True):
     allocation_modal()
 
