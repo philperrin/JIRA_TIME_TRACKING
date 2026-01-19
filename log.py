@@ -1,4 +1,9 @@
 import streamlit as st
+
+st.set_page_config(
+    layout="wide"
+)
+
 st.title("⏰ Log time to Jira")
 
 st.text("Use this page to assign your time to specific tasks in Jira.")
