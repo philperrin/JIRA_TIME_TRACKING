@@ -99,7 +99,9 @@ if "submission_data" not in st.session_state:
 def allocation_modal():
   st.markdown("Input details for a scheduled project allocation here. Submit this form once per project. These details are optional and only used on the reporting tab.")
   with st.form("allocation_form", clear_on_submit=True):
-    proj_sel = ['One','Two','Three']
+    user_email = st.user["email"].upper()
+    proj_df = active_session.sql(f"SELECT PROJ FROM {db_var}.{env}.USER_PROJECTS WHERE USERNAME = \'{user_email}\'").to_pandas()
+    proj_sel = proj_df['PROJ'].tolist()
     selected_proj = st.selectbox(
     'Select project:',
     proj_sel
@@ -112,18 +114,22 @@ def allocation_modal():
     proj_end   = st.date_input("End date:",format="MM/DD/YYYY")
     submitted = st.form_submit_button("Save Allocation",)
     if submitted:
-        st.rerun()
-    if 1==1:
+        TABLE_NAME = "ALLOCATION_DETAILS"
+        COL1 = "USER_EMAIL" 
+        COL2 = "JIRA_PROJ_ID"
+        COL3 = "HRS_WK"
+        COL4 = "EFFECTIVE_START"
+        COL5 = "EFFECTIVE_END"
+        COL6 = "UPDATED_AT"
+        updated_at = datetime.now()
         try:
-            TABLE_NAME = "ALLOCATION_DETAILS"
-            COL1 = "USER_EMAIL" 
-            COL2 = "API_KEY" 
-            COL3 = "UPDATED_AT"
-            COL4 = "JIRA_USER_ID"
+            active_session.sql(f"INSERT INTO {db_var}.{env}.{TABLE_NAME} ({COL1},{COL2},{COL3},{COL4},{COL5},{COL6}) VALUES('{user_email}','{selected_proj}','{hrs_wk}','{proj_start}','{proj_end}','{updated_at}')").collect()
+            st.success("Allocation stored.")
+            st.rerun()
         except Exception as e:
             st.error(f"Error: {e}")
-    else:
-        st.warning("Allocation error")
+    #else:
+    #    st.warning("Allocation error")
 
 #Top of page
 col1,col2,col3 = st.columns(3)
@@ -171,7 +177,6 @@ try:
             st.error(f"Response: {response2.text if 'response' in locals() else 'No response'}")
         issue_result = json.loads(response2.text)
 
-
         normalized_df = pd.json_normalize(issue_result['issues'])
         base_url = "https://phdata.atlassian.net/browse/"
         normalized_df['link'] = base_url + normalized_df['key'] + '#' + normalized_df['key']
@@ -180,14 +185,26 @@ try:
         filtered_df = normalized_df[columns_to_show]
         issue_count = len(filtered_df)
 
-
         unique_projects = normalized_df['fields.project.key'].unique()
+        try:
+            TABLE_NAME = "USER_PROJECTS"
+            COL1 = "USERNAME"
+            COL2 = "UPDATED_AT"
+            COL3 = "PROJ"
+            user_email = st.user["email"].upper()
+            updated_at = datetime.now()
+            active_session.sql(f"DELETE FROM {db_var}.{env}.{TABLE_NAME} WHERE USERNAME = \'{user_email}\'").collect()
+            for j in unique_projects:
+                proj=j
+                insert_query = f"INSERT INTO {db_var}.{env}.{TABLE_NAME} ({COL1},{COL2},{COL3}) VALUES (UPPER('{user_email}'),'{updated_at}','{proj}')"
+                active_session.sql(insert_query).collect()
+        except Exception as e:
+            st.error(e)
+
         unique_project_count = len(unique_projects)
 
         st.text(f"Below you will find the Jira issues that you are either assigned to or are watching, grouped by project.\n\nYou currrently have {issue_count} Jira issues in {unique_project_count} projects. You may bill time against each of these issues on the main 'Log time to Jira' page.")
         st.text("You may click on any of these issues to change the assignee, status, or to stop watching them.")
-
-
 
         for proj in unique_projects:
             subset_df = filtered_df[normalized_df['fields.project.key'] == proj]
@@ -208,24 +225,26 @@ except Exception as e:
     st.warning("Please add an API token to generate a summary of Jira issues.")
 
 st.header("Project Allocations", divider="gray")
-allocation_container = st.container(border=True)
-allocation_container.write("If user has allocations, populate them here.")
-
-#with st.expander("Components to build:"):
-#  st.markdown(":white_check_mark:   Input user email")
-#  st.markdown(":white_check_mark:   Input Jira filter id")
-#  st.markdown(":white_check_mark:   Input Jira API key")
-#  st.markdown(":white_check_mark:   Mask Jira API key")
-#  st.markdown(":white_check_mark:   Create view showing user's most recent submission")
-#  st.markdown(":white_check_mark:   Collect user Jira id (requires user email and API key)")
-#  st.markdown(":white_check_mark:   For issues: use (assigned or watching) and != Done")
-#  st.markdown(":white_check_mark:   Build a display of issues")
-#  st.markdown(":white_check_mark:   Hyperlink issue key")  
-#  st.markdown(":white_check_mark:   Input allocations")
-with st.expander("Functionalities:"):
-  st.markdown(":firecracker:   Button to pop up base config modal")
-  st.markdown("..:white_check_mark:   Modal to collect API key")
-  st.markdown("..:white_check_mark:   On modal submit -> collect API key, user Jira id and store with config details")
-  st.markdown(":firecracker:   Button to pop up allocation modal")
-  st.markdown("..:boom:   Modal has input table for: Jira project id, client name, project name, weekly hrs, effective dates")
-  st.markdown("..:boom:   If allocation table has data in it, display current allocation details")
+allocation_count_query = f"""
+SELECT COUNT(*) FROM {db_var}.{env}.ALLOCATION_DETAILS WHERE USER_EMAIL = \'{user_email}\' AND (EFFECTIVE_END >= CURRENT_DATE() OR EFFECTIVE_END IS NULL) ORDER BY JIRA_PROJ_ID ASC
+"""
+try:
+    allocation_count = active_session.sql(allocation_count_query).to_pandas()
+    if not api_count.empty:
+        allocation_container = st.container(border=True)
+        allocation_query = f"""
+        SELECT JIRA_PROJ_ID, HRS_WK, EFFECTIVE_START, EFFECTIVE_END FROM {db_var}.{env}.ALLOCATION_DETAILS WHERE USER_EMAIL = \'{user_email}\' AND (EFFECTIVE_END >= CURRENT_DATE() OR EFFECTIVE_END IS NULL) ORDER BY JIRA_PROJ_ID ASC
+        """
+        allocation_df = active_session.sql(allocation_query)
+        allocation_container.dataframe(allocation_df,
+                                       column_config={
+                                           "JIRA_PROJ_ID": "Project",
+                                           "HRS_WK": "Hours per week",
+                                           "EFFECTIVE_START": "Start",
+                                           "EFFECTIVE_END": "End"
+                                           }
+                                       ,hide_index=True)
+    else:
+        st.warning("Please add API key and allocations")
+except Exception as e:
+    st.warning("Please add API key and allocations")
