@@ -131,10 +131,10 @@ def allocation_modal():
 
 #Top of page
 col1,col2,col3,col4 = st.columns(4)
-with col2:
+with col1:
   if st.button("Add API Token", use_container_width=True):
     config_modal()
-with col3:
+with col2:
   if st.button("Add Project Allocations", use_container_width=True):
     allocation_modal()
 
