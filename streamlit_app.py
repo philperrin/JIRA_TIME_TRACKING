@@ -1,5 +1,9 @@
 import streamlit as st
 
+st.set_page_config(
+    layout="centered"
+)
+
 pages = {
     "Menu": [
         st.Page("log.py", title="Log time to Jira"),
