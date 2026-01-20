@@ -117,3 +117,6 @@ CREATE OR REPLACE STREAMLIT $db_var.$schema_var.$app_name
     MAIN_FILE = '/streamlit_app.py'
     QUERY_WAREHOUSE = JIRA_TIME_TRACKING_WH
     TITLE = $app_title;
+
+-- It should already have the files loaded, but let's be explicit.
+ALTER STREAMLIT $app_name PULL;
