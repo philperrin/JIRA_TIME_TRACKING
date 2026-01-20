@@ -1,14 +1,23 @@
 -- Run these in your SQL environment first to get the bones set up.
 
 -- Set session variables.
-SET wh_var = JIRA_TIME_TRACKING_WH;
-SET db_var = JIRA_TIME_TRACKING;
-SET schema_var = TEST;
-SET role_var = JIRA_TIME_TRACKER;
-SET net_rule = JIRA_NETWORK_RULE;
-SET api_int = JIRA_TIME_TRACKING_API;
-SET repo_name = JIRA_TIME_TRACKING;
-SET app_name = JIRA_TIME_TRACKER;
+---- Warehouse name:
+SET wh_var = 'JIRA_TIME_TRACKING_WH';
+---- Database name:
+SET db_var = 'JIRA_TIME_TRACKING';
+---- Schema name:
+SET schema_var = 'TEST';
+---- Role name:
+SET role_var = 'JIRA_TIME_TRACKER';
+---- Network rule name:
+SET net_rule = 'JIRA_NETWORK_RULE';
+---- API integration name:
+SET api_int = 'JIRA_TIME_TRACKING_API';
+---- Internal repository name:
+SET repo_name = 'JIRA_TIME_TRACKING';
+---- Streamlit app name:
+SET app_name = 'JIRA_TIME_TRACKER';
+---- Streamlit app title:
 SET app_title = 'JIRA TIME TRACKER';
 
 -- Create warehouse, set details per your needs.
