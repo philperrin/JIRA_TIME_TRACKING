@@ -37,9 +37,29 @@ END;
 $$;
 
 -- Database & schema.
-CREATE DATABASE IF NOT EXISTS $db_var;
-CREATE SCHEMA IF NOT EXISTS $db_var.$schema_var;
-USE SCHEMA $db_var.$schema_var;
+EXECUTE IMMEDIATE $$
+DECLARE
+    db_var VARCHAR := $db_var;
+BEGIN
+    EXECUTE IMMEDIATE 'CREATE DATABASE IF NOT EXISTS ' || db_var || '';
+END;
+$$;
+EXECUTE IMMEDIATE $$
+DECLARE
+    db_var VARCHAR := $db_var;
+    schema_var VARCHAR := $schema_var;
+BEGIN
+    EXECUTE IMMEDIATE 'CREATE SCHEMA IF NOT EXISTS ' || db_var || '.' || schema_var ||'';
+END;
+$$;
+EXECUTE IMMEDIATE $$
+DECLARE
+    db_var VARCHAR := $db_var;
+    schema_var VARCHAR := $schema_var;
+BEGIN
+    EXECUTE IMMEDIATE 'USE SCHEMA ' || db_var || '.' || schema_var ||'';
+END;
+$$
 
 -- Create role.
 CREATE ROLE IF NOT EXISTS $role_var;
