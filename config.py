@@ -236,6 +236,7 @@ try:
         SELECT JIRA_PROJ_ID, HRS_WK, EFFECTIVE_START, EFFECTIVE_END FROM {db_var}.{env}.ALLOCATION_DETAILS WHERE USER_EMAIL = \'{user_email}\' AND (EFFECTIVE_END >= CURRENT_DATE() OR EFFECTIVE_END IS NULL) ORDER BY JIRA_PROJ_ID ASC
         """
         allocation_df = active_session.sql(allocation_query)
+        allocation_container.text("You have provided these details for your weekly allocations. On the 'Reports' page, you can view your time spent compared to your allocations.")
         allocation_container.dataframe(allocation_df,
                                        column_config={
                                            "JIRA_PROJ_ID": "Project",
@@ -245,6 +246,6 @@ try:
                                            }
                                        ,hide_index=True)
     else:
-        st.warning("Please add API key and allocations")
+        st.warning("Please add API key and allocations.")
 except Exception as e:
-    st.warning("Please add API key and allocations")
+    st.warning("Please add API key and allocations.")
