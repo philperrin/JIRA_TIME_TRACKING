@@ -178,14 +178,18 @@ try:
         issue_result = json.loads(response2.text)
 
         normalized_df = pd.json_normalize(issue_result['issues'])
+        
         base_url = "https://phdata.atlassian.net/browse/"
         normalized_df['link'] = base_url + normalized_df['key'] + '#' + normalized_df['key']
         columns_to_show = ['link', 'fields.summary','fields.project.name']
 
         filtered_df = normalized_df[columns_to_show]
-        issue_count = len(filtered_df)
+        
+        issue_count = len(filtered_df[~filtered_df['fields.project.name'].str.contains("Archived")])
 
-        unique_projects = normalized_df['fields.project.key','fields.project.name'].unique()
+        unique_projects = normalized_df[['fields.project.key','fields.project.name']].drop_duplicates()
+        unique_projects = unique_projects[~unique_projects['fields.project.name'].str.contains("Archived")]
+        
         try:
             TABLE_NAME = "USER_PROJECTS"
             COL1 = "USERNAME"
@@ -195,9 +199,9 @@ try:
             user_email = st.user["email"].upper()
             updated_at = datetime.now()
             active_session.sql(f"DELETE FROM {db_var}.{env}.{TABLE_NAME} WHERE USERNAME = \'{user_email}\'").collect()
-            for j in unique_projects:
+            for index,j in unique_projects.iterrows():
                 proj=j[0]
-                proj_name=j[1]
+                proj_name = j[1]
                 insert_query = f"INSERT INTO {db_var}.{env}.{TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email}'),'{updated_at}','{proj}','{proj_name}')"
                 active_session.sql(insert_query).collect()
         except Exception as e:
@@ -208,12 +212,15 @@ try:
         st.text(f"Below you will find the Jira issues that you are either assigned to or are watching, grouped by project.\n\nYou currrently have {issue_count} Jira issues in {unique_project_count} projects. You may bill time against each of these issues on the main 'Log time to Jira' page.")
         st.text("You may click on any of these issues to change the assignee, status, or to stop watching them.")
 
-        for proj in unique_projects:
-            subset_df = filtered_df[normalized_df['fields.project.key'] == proj]
+        unique_projects_list = unique_projects[['fields.project.key','fields.project.name']].drop_duplicates()
+        st.dataframe(unique_projects_list)
+        for index,proj in unique_projects_list.iterrows():
+            subset_df = filtered_df[normalized_df['fields.project.key'] == proj[0]]
             with st.container(border=True):
-                proj_link = "https://phdata.atlassian.net/jira/software/c/projects/"+proj+"/summary"
-                st.markdown(f"[{proj} Jira Summary]({proj_link})")
+                proj_link = "https://phdata.atlassian.net/jira/software/c/projects/"+proj[0]+"/summary"
+                st.markdown(f"[{proj[1]}]({proj_link})")
                 st.dataframe(subset_df,hide_index=True,
+                             column_order={"link","fields.summary"},
                              column_config={
                                  "link": st.column_config.LinkColumn(
                                      "Issue Key",
@@ -242,12 +249,3 @@ try:
         allocation_container.dataframe(allocation_df,
                                        column_config={
                                            "JIRA_PROJ_ID": "Project",
-                                           "HRS_WK": "Hours per week",
-                                           "EFFECTIVE_START": "Start",
-                                           "EFFECTIVE_END": "End"
-                                           }
-                                       ,hide_index=True)
-    else:
-        st.warning("Please add API key and allocations.")
-except Exception as e:
-    st.warning("Please add API key and allocations.")
