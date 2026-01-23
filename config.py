@@ -249,3 +249,12 @@ try:
         allocation_container.dataframe(allocation_df,
                                        column_config={
                                            "JIRA_PROJ_ID": "Project",
+                                           "HRS_WK": "Hours per week",
+                                           "EFFECTIVE_START": "Start",
+                                           "EFFECTIVE_END": "End"
+                                           }
+                                       ,hide_index=True)
+    else:
+        st.warning("Please add API key and allocations.")
+except Exception as e:
+    st.warning("Please add API key and allocations.")
