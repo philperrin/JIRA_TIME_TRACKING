@@ -212,7 +212,7 @@ try:
         st.text(f"Below you will find the Jira issues that you are either assigned to or are watching, grouped by project.\n\nYou currrently have {issue_count} Jira issues in {unique_project_count} projects. You may bill time against each of these issues on the main 'Log time to Jira' page.")
         st.text("You may click on any of these issues to change the assignee, status, or to stop watching them.")
 
-        unique_projects_list = unique_projects[['fields.project.key','fields.project.name']].drop_duplicates()
+        unique_projects_list = unique_projects[['fields.project.key','fields.project.name']].drop_duplicates().sort_values(by='fields.project.name')
         for index,proj in unique_projects_list.iterrows():
             subset_df = filtered_df[normalized_df['fields.project.key'] == proj[0]]
             with st.container(border=True):
