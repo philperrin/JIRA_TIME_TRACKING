@@ -213,7 +213,6 @@ try:
         st.text("You may click on any of these issues to change the assignee, status, or to stop watching them.")
 
         unique_projects_list = unique_projects[['fields.project.key','fields.project.name']].drop_duplicates()
-        st.dataframe(unique_projects_list)
         for index,proj in unique_projects_list.iterrows():
             subset_df = filtered_df[normalized_df['fields.project.key'] == proj[0]]
             with st.container(border=True):
