@@ -180,23 +180,25 @@ try:
         normalized_df = pd.json_normalize(issue_result['issues'])
         base_url = "https://phdata.atlassian.net/browse/"
         normalized_df['link'] = base_url + normalized_df['key'] + '#' + normalized_df['key']
-        columns_to_show = ['link', 'fields.summary']
+        columns_to_show = ['link', 'fields.summary','fields.project.name']
 
         filtered_df = normalized_df[columns_to_show]
         issue_count = len(filtered_df)
 
-        unique_projects = normalized_df['fields.project.key'].unique()
+        unique_projects = normalized_df['fields.project.key','fields.project.name'].unique()
         try:
             TABLE_NAME = "USER_PROJECTS"
             COL1 = "USERNAME"
             COL2 = "UPDATED_AT"
             COL3 = "PROJ"
+            COL4 = "PROJ_NAME"
             user_email = st.user["email"].upper()
             updated_at = datetime.now()
             active_session.sql(f"DELETE FROM {db_var}.{env}.{TABLE_NAME} WHERE USERNAME = \'{user_email}\'").collect()
             for j in unique_projects:
-                proj=j
-                insert_query = f"INSERT INTO {db_var}.{env}.{TABLE_NAME} ({COL1},{COL2},{COL3}) VALUES (UPPER('{user_email}'),'{updated_at}','{proj}')"
+                proj=j[0]
+                proj_name=j[1]
+                insert_query = f"INSERT INTO {db_var}.{env}.{TABLE_NAME} ({COL1},{COL2},{COL3},{COL4}) VALUES (UPPER('{user_email}'),'{updated_at}','{proj}','{proj_name}')"
                 active_session.sql(insert_query).collect()
         except Exception as e:
             st.error(e)
