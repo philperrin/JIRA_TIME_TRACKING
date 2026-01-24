@@ -212,6 +212,10 @@ try:
             # Filter out archived projects first
             normalized_df = normalized_df[~normalized_df['fields.project.name'].str.contains("Archived", na=False)]
             
+            ##### Need to send this to a table to use as needed.
+            st.dataframe(normalized_df[['id', 'key', 'fields.summary', 'fields.project.key','fields.project.name']])
+
+            
             # Create link column
             normalized_df['link'] = JIRA_BROWSE_URL + normalized_df['key'] + '#' + normalized_df['key']
             
