@@ -318,3 +318,18 @@ try:
         
 except Exception as e:
     st.error(f"Error loading allocations: {e}")
+
+
+
+
+# Example: Dynamic list of tab names (can come from a DB or DF)
+tab_proj = unique_projects_sorted["fields.project.key"].values.tolist()
+# Create dynamic number of tabs
+tabs = st.tabs(tab_proj)
+
+# Iterate through the tabs to add content
+for i, tab in enumerate(tabs):
+    with tab:
+        st.write(f"{tab_proj[i]} Summary Link")
+        st.write(f"List of {tab_proj[i]} issues.")
+
