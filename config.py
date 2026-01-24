@@ -54,23 +54,26 @@ def config_modal():
             SECRET_STRING = {secret_string}
             """
             active_session.sql(create_secret_sql).collect()
-      
-      secret_show = f"""
-      SHOW SECRETS IN {db_var}.{env};
-      """
-      secret_list = f"""
-      SELECT LISTAGG("name", ', ') WITHIN GROUP (ORDER BY "name") AS secret_names_string
-      FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
-      """
-      active_session.sql(secret_show).collect()
-      secret_list_res = active_session.sql(secret_list)
-      secret_list_res_arr = secret_list_res.collect()[0]['SECRET_NAMES_STRING']
-      
-      update_auth_sec = f"""
-      ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration 
-          SET ALLOWED_AUTHENTICATION_SECRETS = ({secret_list_res_arr})
-          ENABLED = TRUE;
-      """
+            
+            secret_show = f"""
+            SHOW SECRETS IN {db_var}.{env};
+            """
+            
+            secret_list = f"""
+            SELECT LISTAGG("name", ', ') WITHIN GROUP (ORDER BY "name") AS secret_names_string
+            FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
+            """
+            
+            active_session.sql(secret_show).collect()
+            secret_list_res = active_session.sql(secret_list)
+            secret_list_res_arr = secret_list_res.collect()[0]['SECRET_NAMES_STRING']
+            
+            update_auth_sec = f"""
+            ALTER EXTERNAL ACCESS INTEGRATION jira_access_integration 
+            SET ALLOWED_AUTHENTICATION_SECRETS = ({secret_list_res_arr})
+            ENABLED = TRUE;
+            """
+            
             active_session.sql(update_auth_sec).collect()
             
             # Verify API token with Jira
