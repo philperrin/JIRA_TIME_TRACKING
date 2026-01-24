@@ -48,12 +48,12 @@ def config_modal():
             return
         
         try:
-      create_secret_sql = f"""
-      CREATE OR REPLACE SECRET {db_var}.{env}.{jira_cred_name}
-          TYPE = GENERIC_STRING
-          SECRET_STRING = {secret_string}
-      """
-      active_session.sql(create_secret_sql).collect()
+            create_secret_sql = f"""
+            CREATE OR REPLACE SECRET {db_var}.{env}.{jira_cred_name}
+            TYPE = GENERIC_STRING
+            SECRET_STRING = {secret_string}
+            """
+            active_session.sql(create_secret_sql).collect()
       
       secret_show = f"""
       SHOW SECRETS IN {db_var}.{env};
